@@ -6,8 +6,9 @@ TOTAL_STEP = SIZE *SIZE;
 /**@type {HTMLCanvasElement} */
 let canvas = document.createElement('canvas'), ctx = canvas.getContext('2d');
 canvas.width = canvas.height = SL;
-canvas.style.cssText = 'position: absolute; inset: 0;margin: auto; cursor: pointer;';
+canvas.classList.add('game-canvas'); 
 document.body.appendChild(canvas);
+
 
 
 let isBlack = true,
