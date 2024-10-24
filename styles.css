@@ -9,20 +9,90 @@ body {
     background-color: #dbaf8b;
 }
 
+
+
+
+.mode-selection {
+    display: flex;
+    justify-content: center;
+    /* 让按钮横向排列并居中 */
+    margin: 10px 0;
+    /* 在标题和主内容之间添加适当的间距 */
+}
+
+.mode-button {
+    padding: 10px 20px;
+    margin: 0 10px;
+    /* 按钮之间的间距 */
+    background-color: #f4f4f4;
+    border: 2px solid #000;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+    opacity: 0;
+    /* 初始透明 */
+    animation: fadeInOut 9s 2;
+}
+
+.mode-button:hover {
+    background-color: #e4a751;
+    /* 悬停时按钮变色 */
+}
+
+/* 每个按钮的动画延迟 */
+.mode-button:nth-child(1) {
+    animation-delay: 0s;
+    /* 第一个按钮最先显示 */
+}
+
+.mode-button:nth-child(2) {
+    animation-delay: 0.5s;
+    /* 第二个按钮延迟3秒显示 */
+}
+
+.mode-button:nth-child(3) {
+    animation-delay: 1.3s;
+    /* 第三个按钮延迟6秒显示 */
+}
+
+@keyframes fadeInOut {
+
+    0%,
+    100% {
+        opacity: 0;
+        /* 起始和结束时透明 */
+    }
+
+    10%,
+    90% {
+        opacity: 1;
+        /* 中间阶段可见 */
+    }
+}
+
+
+
+
+
 .main-content {
     display: flex;
-    justify-content: center; /* 仅水平居中主内容 */
-    padding-top: 50px; /* 确保主内容与顶部有一定间距 */
+    justify-content: center;
+    /* 仅水平居中主内容 */
+    padding-top: 50px;
+    /* 确保主内容与顶部有一定间距 */
 }
 
 .game-container {
     position: relative;
-    display: inline-block; /* 使容器根据内容自适应宽度 */
+    display: inline-block;
+    /* 使容器根据内容自适应宽度 */
 }
 
 canvas {
     display: block;
-    margin: 0 auto; /* 使 canvas 在其容器内水平居中 */
+    margin: 0 auto;
+    /* 使 canvas 在其容器内水平居中 */
     cursor: pointer;
     border: 3px solid #000;
     box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.6);
@@ -35,10 +105,14 @@ canvas {
 }
 
 .undo-button {
-    position: absolute; /* 设置按钮为绝对定位，相对于 game-container 定位 */
-    bottom: -55px; /* 按钮位于棋盘正下方 */
-    left: 50%; /* 水平居中对齐 */
-    transform: translateX(-50%); /* 将按钮的左边距向左偏移自身宽度的一半，确保居中 */
+    position: absolute;
+    /* 设置按钮为绝对定位，相对于 game-container 定位 */
+    bottom: -55px;
+    /* 按钮位于棋盘正下方 */
+    left: 50%;
+    /* 水平居中对齐 */
+    transform: translateX(-50%);
+    /* 将按钮的左边距向左偏移自身宽度的一半，确保居中 */
     padding: 10px 20px;
     background-color: rgba(0, 0, 0, 0.6);
     color: white;
@@ -61,10 +135,12 @@ h1 {
     font-family: monospace;
     width: 9ch;
     overflow: hidden;
-    text-align: center; /* 让 h1 文字居中 */
+    text-align: center;
+    /* 让 h1 文字居中 */
     animation: 1.5s typing steps(9, jump-none) forwards;
     position: relative;
-    left: 50%; /* h1 居中 */
+    left: 50%;
+    /* h1 居中 */
     transform: translateX(-50%);
 }
 
@@ -72,6 +148,7 @@ h1 {
     from {
         width: 1ch;
     }
+
     to {
         width: 9ch;
     }
