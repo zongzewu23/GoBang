@@ -135,6 +135,12 @@ const drawRedPoint = (x, y, r = 0.05 * W) => {
     ctx.fill();
 }
 
+let restartButton = document.querySelector('.restart-button');
+
+restartButton.onclick = () => {
+    restart();  
+};
+
 const restart = () => {
     ctx.clearRect(0, 0, SL, SL);
     drawBoard();

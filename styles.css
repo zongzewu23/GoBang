@@ -107,7 +107,7 @@ canvas {
 .undo-button {
     position: absolute;
     /* 设置按钮为绝对定位，相对于 game-container 定位 */
-    bottom: -55px;
+    bottom: -100px;
     /* 按钮位于棋盘正下方 */
     left: 50%;
     /* 水平居中对齐 */
@@ -125,6 +125,26 @@ canvas {
 }
 
 .undo-button:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+.restart-button {
+    position: absolute;
+    bottom: -50px;
+    right: 50%; /* 将按钮放在 undo 按钮旁边 */
+    transform: translateX(50%); /* 水平对齐 */
+    padding: 10px 20px;
+    background-color: rgba(0, 0, 0, 0.6);
+    color: white;
+    font-size: 16px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s ease;
+}
+
+.restart-button:hover {
     background-color: rgba(0, 0, 0, 0.8);
 }
 
