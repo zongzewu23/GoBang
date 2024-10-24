@@ -1,25 +1,28 @@
-:root{
+:root {
     font-size: 20px;
 }
+
 body {
     margin: 0;
     padding: 0;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
     height: 100vh;
     background-color: #dbaf8b;
 }
 
-canvas {
-    
-    display: block;
+.main-content {
+    display: flex;
+    justify-content: center; /* 仅水平居中主内容 */
+    padding-top: 50px; /* 确保主内容与顶部有一定间距 */
+}
+
+.game-container {
     position: relative;
-    margin-top: 20px;
-    top: 100px;
-    inset: 0;
-    margin: auto;
+    display: inline-block; /* 使容器根据内容自适应宽度 */
+}
+
+canvas {
+    display: block;
+    margin: 0 auto; /* 使 canvas 在其容器内水平居中 */
     cursor: pointer;
     border: 3px solid #000;
     box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.6);
@@ -31,20 +34,45 @@ canvas {
     background-position: center;
 }
 
-h1 {
-font-size: 3rem;
-margin: 0;
-padding: 0;
-font-family: monospace;
-width: 9ch;
-overflow: hidden;
-animation: 1.5s typing steps(9, jump-none) forwards;
+.undo-button {
+    position: absolute; /* 设置按钮为绝对定位，相对于 game-container 定位 */
+    bottom: -55px; /* 按钮位于棋盘正下方 */
+    left: 50%; /* 水平居中对齐 */
+    transform: translateX(-50%); /* 将按钮的左边距向左偏移自身宽度的一半，确保居中 */
+    padding: 10px 20px;
+    background-color: rgba(0, 0, 0, 0.6);
+    color: white;
+    font-size: 16px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s ease;
 }
+
+.undo-button:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+h1 {
+    font-size: 3rem;
+    margin: 0;
+    padding: 0;
+    font-family: monospace;
+    width: 9ch;
+    overflow: hidden;
+    text-align: center; /* 让 h1 文字居中 */
+    animation: 1.5s typing steps(9, jump-none) forwards;
+    position: relative;
+    left: 50%; /* h1 居中 */
+    transform: translateX(-50%);
+}
+
 @keyframes typing {
-    from{
-    width: 1ch;
+    from {
+        width: 1ch;
     }
-    to{
+    to {
         width: 9ch;
     }
 }

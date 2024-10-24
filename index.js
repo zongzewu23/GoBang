@@ -1,20 +1,43 @@
+
+
 const SIZE = 15,
-W = Math.min(window.innerHeight, window.innerWidth)/ (SIZE + 3),
+W = Math.min(window.innerHeight, window.innerWidth)/ (SIZE + 5),
 SL = W*(SIZE + 1),
 TOTAL_STEP = SIZE *SIZE;
 
-/**@type {HTMLCanvasElement} */
-let canvas = document.createElement('canvas'), ctx = canvas.getContext('2d');
-canvas.width = canvas.height = SL;
-canvas.classList.add('game-canvas'); 
-document.body.appendChild(canvas);
+const BOARD_BG_COLOR = '#E4A751',
+LINE_WIDTH = 1,
+LINE_COLOR = '#000000', 
+RED_POINT_COLOR = '#F56C6C',
+BLACK_PIECE_COLOR = '#000000', //Making Gradients
+BLACK_PIECE_TOP_COLOR = '#707070',
+WHITE_PIECE_COLOR = '#D5D8DC',  
+WHITE_PIECE_TOP_COLOR = '#FFFFFF', //Making Gradients
+PIECE_SHADOW_COLOR = 'rgba(0, 0, 0, 0.5)',
+BOARD_SHADOW_COLOR = '#888888',
+BLACK_ROLE = 1,
+WHITE_ROLE = 2, 
+EMPTY_ROLE = -1;
 
+/**@type {HTMLCanvasElement} */
+let gameContainer = document.querySelector('.game-container');
+let canvas = document.getElementById('gameCanvas');
+let ctx = canvas.getContext('2d');
+canvas.width = canvas.height = SL;
+
+let undoButton = document.createElement('button');
+undoButton.innerText = 'Undo';
+undoButton.classList.add('undo-button');
+
+// 将按钮添加到 gameContainer 中，而不是 body
+gameContainer.appendChild(undoButton);
 
 
 let isBlack = true,
+
 moveSteps = 0,
 // black1 white2 empty -1
-  chess = Array.from({length : SIZE},  ()=> Array(SIZE).fill(-1));
+  chess = Array.from({length : SIZE},  ()=> Array(SIZE).fill(EMPTY_ROLE));
 
 console.log(chess);
 canvas.onclick = e =>{
@@ -86,5 +109,34 @@ const drawLine = (x1, y1, x2, y2, lineWidth = 1, lineColor = 'black')=>{
     ctx.lineTo(x2*W +W, y2*W+W);
     ctx.stroke();
 }
+
+const debounce = (fn, delay)=>{
+    let timer = null;
+    return (...args) =>{
+        clearTimeout(timer);
+        timer = setTimeout(()=>{
+            fn(...args);
+        },delay);
+    }
+}
+
+const handleResize =()=>{
+    ctx.clearRect(0, 0, SL, SL);
+    W = Math.min(window.innerWidth, window.innerHeight) / (SIZE + 3);
+    SL = W * (SIZE + 1);
+    canvas.width = canvas.height = SL;
+    drawBoard();
+    steps.forEach(({x, y, isBlack}) => {
+        drawPiece(x, y, isBlack)
+      })
+
+      if (steps.length > 0) {
+        let { x, y } = steps.at(-1)
+        drawRedPoint(x, y)
+      }
+}
+
+window.onresize = debounce(handleResize, 512)
+
 window.onload = drawBoard
 
