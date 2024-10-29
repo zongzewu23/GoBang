@@ -58,6 +58,7 @@ const clearPiece = (x, y) => {
     drawLine(x > 0 ? x - 0.5 : x, y, x < SIZE - 1 ? x + 0.5 : x, y);
 }
 
+/*
 canvas.onclick = e => {
     //console.log(chess);
     let [x, y] = [e.offsetX, e.offsetY].map(p => Math.round(p / W) - 1);
@@ -74,6 +75,62 @@ canvas.onclick = e => {
     isWin(x, y, chess[x][y], chess) ? over(`${isBlack ? '黑' : '白'}棋赢了!`) :
         ++moveSteps === TOTAL_STEPS ? over('游戏结束，平局！') : isBlack = !isBlack;
 }
+        */
+
+canvas.onclick = e => {
+    // 玩家落子逻辑
+    let [x, y] = [e.offsetX, e.offsetY].map(p => Math.round(p / W) - 1);
+    if (chess[x]?.[y] !== EMPTY_ROLE) return;
+    
+    drawPiece(x, y, isBlack);
+    //drawRedPoint(x, y);
+    steps.push({ x, y, isBlack });
+    chess[x][y] = isBlack ? BLACK_ROLE : WHITE_ROLE;
+    
+    // 检查是否赢棋或平局
+    if (isWin(x, y, chess[x][y], chess)) {
+        over(`${isBlack ? '黑' : '白'}棋赢了!`);
+    } else if (++moveSteps === TOTAL_STEPS) {
+        over('游戏结束，平局！');
+    } else {
+        isBlack = !isBlack;  // 切换到 AI 落子
+        sendBoardToAI();     // 发送当前棋盘状态给 AI
+    }
+};
+
+
+
+
+
+// 将棋盘信息发送到后端，并接收 AI 的下一步
+const sendBoardToAI = () => {
+    fetch('/api/ai-move', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ chess }) // 将当前棋盘数据发送给后端
+    })
+    .then(response => response.json())
+    .then(data => {
+        const { move } = data;
+        if (move) {
+            const [x, y] = move;
+            drawPiece(x, y, isBlack);
+            drawRedPoint(x, y);
+            steps.push({ x, y, isBlack });
+            chess[x][y] = isBlack ? BLACK_ROLE : WHITE_ROLE;
+            isBlack = !isBlack;  // 切换回玩家角色
+        }
+    })
+    .catch(error => console.error('Error:', error));
+};
+
+
+
+
+
+
 
 const isWin = (x, y, role, chess) => {
 

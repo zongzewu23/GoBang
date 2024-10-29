@@ -7,8 +7,9 @@ app.use(express.static('public'));
 
 // 创建 API 路由来计算最佳走法
 app.post('/api/ai-move', (req, res) => {
-    const { boardState } = req.body; // 前端传入的棋盘状态
-    const result = getAIMove(boardState);
+    const { chess } = req.body; // 将 boardState 改为 chess
+    const result = getAIMove(chess); // 传入 chess 而非 boardState
+    console.log("AI move result:", result); // 调试日志
     res.json(result); // 返回 AI 的计算结果
 });
 
