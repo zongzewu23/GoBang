@@ -120,7 +120,14 @@ const sendBoardToAI = () => {
             drawRedPoint(x, y);
             steps.push({ x, y, isBlack });
             chess[x][y] = isBlack ? BLACK_ROLE : WHITE_ROLE;
-            isBlack = !isBlack;  // 切换回玩家角色
+            if (isWin(x, y, chess[x][y], chess)) {
+                over(`${isBlack ? '黑' : '白'}棋赢了!`);
+            } else if (++moveSteps === TOTAL_STEPS) {
+                over('游戏结束，平局！');
+            } else {
+                isBlack = !isBlack;  // 切换回玩家角色
+            }
+            
         }
     })
     .catch(error => console.error('Error:', error));
@@ -206,6 +213,7 @@ const restart = () => {
     isBlack = true;
     moveSteps = 0;
     steps = []
+    sendBoardToAI();
 }
 
 
