@@ -1,0 +1,3 @@
+This Gobang AI was created by @lihongxun945. 
+Based on the Alpha-Beta pruning algorithm. 
+GitHub URL: https://github.com/lihongxun945/gobang

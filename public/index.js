@@ -1,4 +1,4 @@
-const SIZE = 15, 
+const SIZE = 15,
     TOTAL_STEPS = SIZE * SIZE;
 
 const BOARD_BG_COLOR = '#E4A751',
@@ -15,7 +15,7 @@ const BOARD_BG_COLOR = '#E4A751',
     WHITE_ROLE = -1,
     EMPTY_ROLE = 0;
 
-    let W = Math.min(window.innerWidth, window.innerHeight) / (SIZE + 5) , // 棋盘格子大小
+let W = Math.min(window.innerWidth, window.innerHeight) / (SIZE + 5), // size of grid
     SL = W * (SIZE + 1);
 
 /**@type {HTMLCanvasElement} */
@@ -28,13 +28,13 @@ let undoButton = document.createElement('button');
 undoButton.innerText = 'Undo';
 undoButton.classList.add('undo-button');
 
-// 将按钮添加到 gameContainer 中，而不是 body
+
 gameContainer.appendChild(undoButton);
 
 
 let chess = Array.from({ length: SIZE }, () => Array(SIZE).fill(EMPTY_ROLE)),
-    isBlack = true, // 黑棋先下
-    moveSteps = 0, // 下棋步数
+    isBlack = true, // Black first
+    moveSteps = 0,
     steps = [];
 
 console.log(chess);
@@ -72,29 +72,34 @@ canvas.onclick = e => {
     drawRedPoint(x, y);
     steps.push({ x, y, isBlack })
     chess[x][y] = isBlack ? BLACK_ROLE : WHITE_ROLE;
-    isWin(x, y, chess[x][y], chess) ? over(`${isBlack ? '黑' : '白'}棋赢了!`) :
+    isWin(x, y, chess[x][y], chess) ? over(`${isBlack ? 'Black' : 'White'}Won!`) :
         ++moveSteps === TOTAL_STEPS ? over('游戏结束，平局！') : isBlack = !isBlack;
 }
         */
 
+
 canvas.onclick = e => {
-    // 玩家落子逻辑
+    // player moving logic
     let [x, y] = [e.offsetX, e.offsetY].map(p => Math.round(p / W) - 1);
     if (chess[x]?.[y] !== EMPTY_ROLE) return;
-    
+    if (steps.length > 0) {
+        let { x, y, isBlack } = steps.at(-1)
+        clearPiece(x, y);
+        drawPiece(x, y, isBlack);
+    };
     drawPiece(x, y, isBlack);
-    //drawRedPoint(x, y);
+    drawRedPoint(x, y);
     steps.push({ x, y, isBlack });
     chess[x][y] = isBlack ? BLACK_ROLE : WHITE_ROLE;
-    
-    // 检查是否赢棋或平局
+
+    // check if there is a winning or it's a draw
     if (isWin(x, y, chess[x][y], chess)) {
-        over(`${isBlack ? '黑' : '白'}棋赢了!`);
+        over(`${isBlack ? 'Black' : 'White'} Won!`);
     } else if (++moveSteps === TOTAL_STEPS) {
-        over('游戏结束，平局！');
+        over('Game Over, Draw！');
     } else {
-        isBlack = !isBlack;  // 切换到 AI 落子
-        sendBoardToAI();     // 发送当前棋盘状态给 AI
+        isBlack = !isBlack;  // switch to AI 
+        sendBoardToAI();     // send the board state to AI
     }
 };
 
@@ -102,35 +107,40 @@ canvas.onclick = e => {
 
 
 
-// 将棋盘信息发送到后端，并接收 AI 的下一步
+// Send the board state to AI at the back end, then get next AI move
 const sendBoardToAI = () => {
     fetch('/api/ai-move', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ chess }) // 将当前棋盘数据发送给后端
+        body: JSON.stringify({ chess }) //Send the current board data to the backend
     })
-    .then(response => response.json())
-    .then(data => {
-        const { move } = data;
-        if (move) {
-            const [x, y] = move;
-            drawPiece(x, y, isBlack);
-            drawRedPoint(x, y);
-            steps.push({ x, y, isBlack });
-            chess[x][y] = isBlack ? BLACK_ROLE : WHITE_ROLE;
-            if (isWin(x, y, chess[x][y], chess)) {
-                over(`${isBlack ? '黑' : '白'}棋赢了!`);
-            } else if (++moveSteps === TOTAL_STEPS) {
-                over('游戏结束，平局！');
-            } else {
-                isBlack = !isBlack;  // 切换回玩家角色
+        .then(response => response.json())
+        .then(data => {
+            const { move } = data;
+            if (move) {
+                const [x, y] = move;
+                if (steps.length > 0) {
+                    let { x, y, isBlack } = steps.at(-1)
+                    clearPiece(x, y);
+                    drawPiece(x, y, isBlack);
+                };
+                drawPiece(x, y, isBlack);
+                drawRedPoint(x, y);
+                steps.push({ x, y, isBlack });
+                chess[x][y] = isBlack ? BLACK_ROLE : WHITE_ROLE;
+                if (isWin(x, y, chess[x][y], chess)) {
+                    over(`${isBlack ? 'Black' : 'White'} Won!`);
+                } else if (++moveSteps === TOTAL_STEPS) {
+                    over('Game Over, Draw！');
+                } else {
+                    isBlack = !isBlack;  //switch to player
+                }
+
             }
-            
-        }
-    })
-    .catch(error => console.error('Error:', error));
+        })
+        .catch(error => console.error('Error:', error));
 };
 
 
@@ -203,7 +213,7 @@ const drawRedPoint = (x, y, r = 0.05 * W) => {
 let restartButton = document.querySelector('.restart-button');
 
 restartButton.onclick = () => {
-    restart();  
+    restart();
 };
 
 const restart = () => {

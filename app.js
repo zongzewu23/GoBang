@@ -5,12 +5,12 @@ const app = express();
 app.use(express.json());
 app.use(express.static('public'));
 
-// 创建 API 路由来计算最佳走法
+// Create an API route to calculate the best path
 app.post('/api/ai-move', (req, res) => {
-    const { chess } = req.body; // 将 boardState 改为 chess
-    const result = getAIMove(chess); // 传入 chess 而非 boardState
-    console.log("AI move result:", result); // 调试日志
-    res.json(result); // 返回 AI 的计算结果
+    const { chess } = req.body;
+    const result = getAIMove(chess); //Pass in the board state
+    console.log("AI move result:", result); //Debug Log
+    res.json(result); // Returns the AI ​​calculation result
 });
 
 app.listen(3000, () => {
