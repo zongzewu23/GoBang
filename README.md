@@ -40,7 +40,7 @@ The project features modern frontend techniques with a Node.js backend to handle
 ---
 
 ## 📂 Project Structure
----
+---plaintext
 /public
   ├── index.html        # Main game interface
   ├── styles.css        # Game styles
