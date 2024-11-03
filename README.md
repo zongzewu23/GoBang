@@ -40,7 +40,7 @@ The project features modern frontend techniques with a Node.js backend to handle
 ---
 
 ## 📂 Project Structure
-```plaintext
+---
 /public
   ├── index.html        # Main game interface
   ├── styles.css        # Game styles
@@ -55,7 +55,7 @@ The project features modern frontend techniques with a Node.js backend to handle
   └── cache.js          # Cache class for AI optimization
 
 
-
+---
 
 ## 📘 Usage
 
@@ -65,4 +65,27 @@ The project features modern frontend techniques with a Node.js backend to handle
 - **Single-Player Mode**: Click on the board to place a piece. The backend will calculate the AI's move and display it.
 - **Undo**: Click the **"Undo"** button to revert your last move.
 - **Restart**: Click the **"Restart"** button to reset the game and start a new session.
+
+
+---
+  ## 📈 Roadmap
+
+---
+
+- [ ] Implement online multiplayer mode.
+- [ ] Optimize AI for faster responses.
+- [ ] Add user login and leaderboard functionality.
+
+---
+
+## 🤝 Contribution
+
+Welcome all contributions! Please submit a **Pull Request** or report any **Issues**.
+
+---
+## 📄 License
+
+This project is licensed under the [MIT License](LICENSE).
+
+
 
