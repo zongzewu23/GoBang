@@ -40,7 +40,7 @@ The project features modern frontend techniques with a Node.js backend to handle
 ---
 
 ## 📂 Project Structure
----plaintext
+```plaintext
 /public
   ├── index.html        # Main game interface
   ├── styles.css        # Game styles
@@ -53,7 +53,7 @@ The project features modern frontend techniques with a Node.js backend to handle
   ├── eval.js           # Board evaluation functions
   ├── config.js         # Global configuration
   └── cache.js          # Cache class for AI optimization
-
+```
 
 ---
 
