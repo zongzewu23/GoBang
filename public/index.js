@@ -24,20 +24,14 @@ let canvas = document.getElementById('gameCanvas');
 let ctx = canvas.getContext('2d');
 canvas.width = canvas.height = SL;
 
-let undoButton = document.createElement('button');
-undoButton.innerText = 'Undo';
-undoButton.classList.add('undo-button');
-
-
-gameContainer.appendChild(undoButton);
-
-
 let chess = Array.from({ length: SIZE }, () => Array(SIZE).fill(EMPTY_ROLE)),
     isBlack = true, // Black first
     moveSteps = 0,
     steps = [];
 
 console.log(chess);
+
+let undoButton = document.querySelector('.undo-button');
 
 undoButton.onclick = e => {
     if (steps.length === 0) return;
