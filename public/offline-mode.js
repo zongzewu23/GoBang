@@ -103,7 +103,7 @@ canvas.onclick = e => {
 
 
 // Send the board state to AI at the back end, then get next AI move
-
+/*
 const sendBoardToAI = () => {
     fetch('/api/ai-move', {
         method: 'POST',
@@ -139,7 +139,7 @@ const sendBoardToAI = () => {
         })
         .catch(error => console.error('Error:', error));
 };
-
+*/
 
 
 
@@ -239,7 +239,7 @@ const restart = () => {
     isBlack = true;
     moveSteps = 0;
     steps = []
-    sendBoardToAI();
+    //sendBoardToAI();
 }
 
 function restartGame() {
@@ -256,7 +256,7 @@ function restartGame() {
     isBlack = true;
     moveSteps = 0;
     steps = [];
-    sendBoardToAI();
+    //sendBoardToAI();
 }
 
 
