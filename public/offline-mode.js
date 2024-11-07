@@ -142,9 +142,6 @@ const sendBoardToAI = () => {
 */
 
 
-
-
-
 const isWin = (x, y, role, chess) => {
 
     for (let [dx, dy] of [[1, 0], [0, 1], [1, 1], [1, -1]]) {
