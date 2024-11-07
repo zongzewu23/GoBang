@@ -126,6 +126,7 @@ const sendBoardToAI = () => {
                 chess[x][y] = isBlack ? BLACK_ROLE : WHITE_ROLE;
                 if (isWin(x, y, chess[x][y], chess)) {
                     over(`${isBlack ? 'Black' : 'White'} Won!`);
+                    
                 } else if (++moveSteps === TOTAL_STEPS) {
                     over('Game Over, Draw！');
                 } else {
@@ -138,11 +139,6 @@ const sendBoardToAI = () => {
 };
 
 
-
-
-
-
-
 const isWin = (x, y, role, chess) => {
 
     for (let [dx, dy] of [[1, 0], [0, 1], [1, 1], [1, -1]]) {
@@ -152,11 +148,31 @@ const isWin = (x, y, role, chess) => {
         if (count === 5) {
             i = 4 - j;
             drawLine(x + dx * i, y + dy * i, x - dx * j, y - dy * j, 5, 'green');
+            showWinAnimation();
             return true;
         }
     }
     return false;
 }
+
+function showWinAnimation() {
+    const overlay = document.createElement('div');
+    overlay.className = 'win-overlay';
+    overlay.innerHTML = `<h2>${isBlack ? 'Black Wins!' : 'White Wins!'}</h2>`;
+    
+    const restartGameButton = document.createElement('button');
+    restartGameButton.textContent = 'Restart Game';
+    restartGameButton.className = 'restart-game-button';
+    restartGameButton.onclick = () => {
+        restartGame();
+    };
+
+    // 将按钮添加到覆盖层
+    overlay.appendChild(restartGameButton);
+    
+    document.body.appendChild(overlay);
+  }
+  
 
 const drawPiece = (x, y, isBlack) => {
     ctx.save();
@@ -219,6 +235,24 @@ const restart = () => {
     steps = []
     sendBoardToAI();
 }
+
+function restartGame() {
+    // remove overplay
+    const overlay = document.querySelector('.win-overlay');
+    if (overlay) {
+        overlay.remove(); // remove from dom
+    }
+
+    // clear board and reset game status
+    ctx.clearRect(0, 0, SL, SL);
+    drawBoard();
+    chess = Array.from({ length: SIZE }, () => new Array(SIZE).fill(EMPTY_ROLE));
+    isBlack = true;
+    moveSteps = 0;
+    steps = [];
+    sendBoardToAI();
+}
+
 
 
 
