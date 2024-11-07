@@ -52,8 +52,7 @@ const clearPiece = (x, y) => {
     drawLine(x > 0 ? x - 0.5 : x, y, x < SIZE - 1 ? x + 0.5 : x, y);
 }
 
-// offline mode logic
-/*
+//offline mode implementation
 canvas.onclick = e => {
     //console.log(chess);
     let [x, y] = [e.offsetX, e.offsetY].map(p => Math.round(p / W) - 1);
@@ -68,11 +67,11 @@ canvas.onclick = e => {
     steps.push({ x, y, isBlack })
     chess[x][y] = isBlack ? BLACK_ROLE : WHITE_ROLE;
     isWin(x, y, chess[x][y], chess) ? over(`${isBlack ? 'Black' : 'White'}Won!`) :
-        ++moveSteps === TOTAL_STEPS ? over('游戏结束，平局！') : isBlack = !isBlack;
+        ++moveSteps === TOTAL_STEPS ? over('Draw！') : isBlack = !isBlack;
 }
-        */
 
-// ai mode logic
+// ai mode comment out in this mode
+/*
 canvas.onclick = e => {
     // player moving logic
     let [x, y] = [e.offsetX, e.offsetY].map(p => Math.round(p / W) - 1);
@@ -97,9 +96,14 @@ canvas.onclick = e => {
         sendBoardToAI();     // send the board state to AI
     }
 };
+*/
+
+
+
 
 
 // Send the board state to AI at the back end, then get next AI move
+
 const sendBoardToAI = () => {
     fetch('/api/ai-move', {
         method: 'POST',
@@ -130,10 +134,15 @@ const sendBoardToAI = () => {
                 } else {
                     isBlack = !isBlack;  //switch to player
                 }
+
             }
         })
         .catch(error => console.error('Error:', error));
 };
+
+
+
+
 
 
 const isWin = (x, y, role, chess) => {
@@ -164,7 +173,7 @@ function showWinAnimation() {
         restartGame();
     };
 
-    // Adding buttons to the overlay
+    // add restart game button to cover
     overlay.appendChild(restartGameButton);
 
     document.body.appendChild(overlay);
@@ -196,7 +205,9 @@ const drawBoard = () => {
         drawLine(0, i, SIZE - 1, i);
         drawLine(i, 0, i, SIZE - 1);
     }
+
 }
+
 
 const drawLine = (x1, y1, x2, y2, lineWidth = 1, lineColor = 'black') => {
     ctx.lineWidth = lineWidth;
@@ -237,6 +248,7 @@ function restartGame() {
     if (overlay) {
         overlay.remove(); // remove from dom
     }
+
     // clear board and reset game status
     ctx.clearRect(0, 0, SL, SL);
     drawBoard();
