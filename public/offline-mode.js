@@ -286,7 +286,7 @@ const handleResize = () => {
     }
 }
 
-const moveSound = new Audio('/src/piecedown.mp3');
+const moveSound = new Audio('../src/piecedown.mp3');
 moveSound.volume = 1;
 function playMoveSound() {
     moveSound.play();
