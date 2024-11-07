@@ -153,6 +153,10 @@ const isWin = (x, y, role, chess) => {
 }
 
 function showWinAnimation() {
+
+    const winSound = new Audio(isBlack ? blackWinSound() : whiteWinSound());
+
+
     const overlay = document.createElement('div');
     overlay.className = 'win-overlay';
     overlay.innerHTML = `<h2>${isBlack ? 'Black Wins!' : 'White Wins!'}</h2>`;
@@ -166,7 +170,6 @@ function showWinAnimation() {
 
     // Adding buttons to the overlay
     overlay.appendChild(restartGameButton);
-
     document.body.appendChild(overlay);
 }
 
@@ -281,6 +284,18 @@ const moveSound = new Audio('/src/piecedown.mp3');
 moveSound.volume = 1;
 function playMoveSound() {
     moveSound.play();
+}
+
+const blackwinSound = new Audio('/src/rockwin.wav');
+blackwinSound.volume = 1;
+function blackWinSound() {
+    blackwinSound.play();
+}
+
+const whitewinSound = new Audio('/src/choirwin.wav');
+whitewinSound.volume = 1;
+function whiteWinSound() {
+    whitewinSound.play();
 }
 
 window.onresize = debounce(handleResize, 512)
