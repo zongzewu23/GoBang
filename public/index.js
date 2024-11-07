@@ -172,6 +172,7 @@ function showWinAnimation() {
 
 
 const drawPiece = (x, y, isBlack) => {
+    playMoveSound();
     ctx.save();
     ctx.beginPath();
     x = x * W + W;
@@ -274,6 +275,12 @@ const handleResize = () => {
         let { x, y } = steps.at(-1)
         drawRedPoint(x, y)
     }
+}
+
+const moveSound = new Audio('/src/piecedown.mp3');
+moveSound.volume = 1;
+function playMoveSound() {
+    moveSound.play();
 }
 
 window.onresize = debounce(handleResize, 512)
