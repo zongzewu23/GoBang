@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <!-- Include CSS file -->
+        <link rel="stylesheet" href="./login.css">
+        <!-- Include jQuery -->
+        <script src="http://code.jquery.com/jquery-latest.js"></script>
+        <title>Login</title>
+    </head>
+    <body>
+        <!-- Outer container -->
+       <div class="box">
+        <!-- Sliding box -->
+        <div class="pre-box">
+            <h1>WELCOME</h1>
+            <p>JOIN US!</p>
+            <div class="img-box">
+                <img src="./img/waoku.jpg" alt="">
+            </div>
+        </div>
+        <!-- Registration box -->
+        <div class="register-form">
+            <!-- Title container -->
+            <div class="title-box">
+                <h1>Register</h1>
+            </div>
+            <!-- Input container -->
+            <div class="input-box">
+                <input type="text" placeholder="Username">
+                <input type="password" placeholder="Password">
+                <input type="password" placeholder="Confirm Password">
+            </div>
+            <!-- Button container -->
+            <div class="btn-box">
+                <button>Register</button>
+                <!-- Click event binding -->
+                <p onclick="mySwitch()">Already have an account? Go to login</p>
+            </div>
+        </div>
+        <!-- Login box -->
+        <div class="login-form">
+            <!-- Title container -->
+            <div class="title-box">
+                <h1>Login</h1>
+            </div>
+            <!-- Input container -->
+            <div class="input-box">
+                <input type="text" placeholder="Username">
+                <input type="password" placeholder="Password">
+            </div>
+            <!-- Button container -->
+            <div class="btn-box">
+                <button>Login</button>
+                <!-- Click event binding -->
+                <p onclick="mySwitch()">Don't have an account? Go to register</p>
+            </div>
+        </div>
+       </div>
+       <script>
+            // Sliding state
+             let flag = true;
+             const mySwitch = () => {
+                if (flag) {
+                    // Get the sliding box DOM element and modify its position
+                    $(".pre-box").css("transform", "translateX(100%)");
+                    // Get the sliding box DOM element and modify its background color
+                    $(".pre-box").css("background-color", "#bfe3f1");
+                    // Change the image path
+                    $("img").attr("src", "./img/wuwu.jpeg");
+                    
+                } else {
+                    $(".pre-box").css("transform", "translateX(0%)");
+                    $(".pre-box").css("background-color", "#53b494");
+                    $("img").attr("src", "./img/waoku.jpg");
+                }
+                flag = !flag;
+             }
+       </script>
+    </body>
+</html>

@@ -1,0 +1,204 @@
+* {
+    /* Remove default margins and padding */
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Remove input outline */
+input {
+    outline: none;
+}
+
+html,
+body {
+    height: 100%;
+}
+
+body {
+    /* Hide overflow */
+    overflow-x: hidden;
+    display: flex;
+    /* Gradient direction from left to right */
+    background: linear-gradient(to right, #199734, #bfe3f1);
+}
+
+
+
+
+/* Outer container */
+.box {
+    width: 1050px;
+    height: 600px;
+    display: flex;
+    /* Relative positioning */
+    position: relative;
+    z-index: 2;
+    margin: auto;
+    /* Rounded corners */
+    border-radius: 8px;
+    /* Border */
+    border: 1px solid rgba(255, 255, 255, .6);
+    /* Box shadow */
+    box-shadow: 2px 1px 19px rgba(0, 0, 0, .1);
+}
+
+/* Sliding box */
+.pre-box {
+    /* Width is half of the outer box */
+    width: 50%;
+    height: 100%;
+    /* Absolute positioning */
+    position: absolute;
+    /* 0 distance from the left of the outer box */
+    left: 0;
+    /* 0 distance from the top of the outer box */
+    top: 0;
+    z-index: 99;
+    border-radius: 4px;
+    background-color: #53b494;
+    box-shadow: 2px 1px 19px rgba(0, 0, 0, .1);
+    /* Animation transition, accelerate then decelerate */
+    transition: 0.5s ease-in-out;
+}
+
+/* Sliding box title */
+.pre-box h1 {
+    margin-top: 150px;
+    text-align: center;
+    /* Letter spacing */
+    letter-spacing: 5px;
+    color: white;
+    /* Disable text selection */
+    user-select: none;
+    /* Text shadow */
+    text-shadow: 4px 4px 3px rgba(0, 0, 0, .1);
+}
+
+/* Sliding box text */
+.pre-box p {
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+    margin: 20px 0;
+    /* Disable text selection */
+    user-select: none;
+    font-weight: bold;
+    color: white;
+    text-shadow: 4px 4px 3px rgba(0, 0, 0, .1);
+}
+
+/* Image container */
+.img-box {
+    width: 200px;
+    height: 200px;
+    margin: 20px auto;
+    /* Circular shape */
+    border-radius: 50%;
+    /* Prevent user selection */
+    user-select: none;
+    overflow: hidden;
+    box-shadow: 4px 4px 3px rgba(0, 0, 0, .1);
+}
+
+/* Image */
+.img-box img {
+    width: 100%;
+    transition: 0.5s;
+}
+
+/* Login and register boxes */
+.login-form,
+.register-form {
+    flex: 1;
+    height: 100%;
+}
+
+/* Title container */
+.title-box {
+    height: 300px;
+    line-height: 500px;
+}
+
+/* Title */
+.title-box h1 {
+    text-align: center;
+    color: white;
+    /* Disable text selection */
+    user-select: none;
+    letter-spacing: 5px;
+    text-shadow: 4px 4px 3px rgba(0, 0, 0, .1);
+}
+
+/* Input container */
+.input-box {
+    display: flex;
+    /* Vertical layout */
+    flex-direction: column;
+    /* Center alignment */
+    align-items: center;
+}
+
+/* Input */
+input {
+    width: 60%;
+    height: 40px;
+    margin-bottom: 20px;
+    text-indent: 10px;
+    border: 1px solid #fff;
+    background-color: rgba(255, 255, 255, 0.3);
+    border-radius: 120px;
+    /* Frosted glass effect */
+    backdrop-filter: blur(10px);
+}
+
+input:focus {
+    /* Cursor color */
+    color: #b0cfe9;
+}
+
+/* Hide placeholder text when focused */
+input:focus::placeholder {
+    opacity: 0;
+}
+
+/* Button container */
+.btn-box {
+    display: flex;
+    justify-content: center;
+}
+
+/* Button */
+button {
+    width: 100px;
+    height: 30px;
+    margin: 0 7px;
+    line-height: 30px;
+    border: none;
+    border-radius: 4px;
+    background-color: #0de07d;
+    color: white;
+}
+
+/* Button hover */
+button:hover {
+    /* Cursor pointer */
+    cursor: pointer;
+    /* Opacity */
+    opacity: .8;
+}
+
+/* Button text */
+.btn-box p {
+    height: 30px;
+    line-height: 30px;
+    /* Disable text selection */
+    user-select: none;
+    font-size: 14px;
+    color: white;
+}
+
+.btn-box p:hover {
+    cursor: pointer;
+    border-bottom: 1px solid white;
+}
