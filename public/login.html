@@ -1,19 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
 
-    <head>
-        <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <!-- Include CSS file -->
-        <link rel="stylesheet" href="./login.css">
-        <!-- Include jQuery -->
-        <script src="http://code.jquery.com/jquery-latest.js"></script>
-        <title>Login</title>
-    </head>
-    <body>
-        <!-- Outer container -->
-       <div class="box">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Include CSS file -->
+    <link rel="stylesheet" href="./login.css">
+    <!-- Include jQuery -->
+    <script src="http://code.jquery.com/jquery-latest.js"></script>
+    <title>Login</title>
+</head>
+
+<body>
+    <!-- Outer container -->
+    <div class="box">
         <!-- Sliding box -->
         <div class="pre-box">
             <h1>WELCOME</h1>
@@ -30,13 +31,13 @@
             </div>
             <!-- Input container -->
             <div class="input-box">
-                <input type="text" placeholder="Username">
-                <input type="password" placeholder="Password">
-                <input type="password" placeholder="Confirm Password">
+                <input type="text" id="registerUsername" placeholder="Username">
+                <input type="password" id="registerPassword" placeholder="Password">
+                <input type="password" id="registerConfirmPassword" placeholder="Confirm Password">
             </div>
             <!-- Button container -->
             <div class="btn-box">
-                <button>Register</button>
+                <button onclick="handleRegister()">Register</button>
                 <!-- Click event binding -->
                 <p onclick="mySwitch()">Already have an account? Go to login</p>
             </div>
@@ -49,36 +50,39 @@
             </div>
             <!-- Input container -->
             <div class="input-box">
-                <input type="text" placeholder="Username">
-                <input type="password" placeholder="Password">
+                <input type="text" id="loginUsername" placeholder="Username">
+                <input type="password" id="loginPassword" placeholder="Password">
             </div>
             <!-- Button container -->
             <div class="btn-box">
-                <button>Login</button>
+                <button onclick="handleLogin()">Login</button>
                 <!-- Click event binding -->
                 <p onclick="mySwitch()">Don't have an account? Go to register</p>
             </div>
         </div>
-       </div>
-       <script>
-            // Sliding state
-             let flag = true;
-             const mySwitch = () => {
-                if (flag) {
-                    // Get the sliding box DOM element and modify its position
-                    $(".pre-box").css("transform", "translateX(100%)");
-                    // Get the sliding box DOM element and modify its background color
-                    $(".pre-box").css("background-color", "#bfe3f1");
-                    // Change the image path
-                    $("img").attr("src", "./img/wuwu.jpeg");
-                    
-                } else {
-                    $(".pre-box").css("transform", "translateX(0%)");
-                    $(".pre-box").css("background-color", "#53b494");
-                    $("img").attr("src", "./img/waoku.jpg");
-                }
-                flag = !flag;
-             }
-       </script>
-    </body>
+    </div>
+
+    <script>
+        // Sliding state
+        let flag = true;
+        const mySwitch = () => {
+            if (flag) {
+                // Get the sliding box DOM element and modify its position
+                $(".pre-box").css("transform", "translateX(100%)");
+                // Get the sliding box DOM element and modify its background color
+                $(".pre-box").css("background-color", "#bfe3f1");
+                // Change the image path
+                $("img").attr("src", "./img/wuwu.jpeg");
+            } else {
+                $(".pre-box").css("transform", "translateX(0%)");
+                $(".pre-box").css("background-color", "#53b494");
+                $("img").attr("src", "./img/waoku.jpg");
+            }
+            flag = !flag;
+        }
+    </script>
+    <!-- Include the custom login JavaScript file -->
+    <script src="./login.js"></script>
+</body>
+
 </html>
