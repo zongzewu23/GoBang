@@ -17,7 +17,11 @@
         <button class="mode-button" onclick="startMode('online')">Online</button>
     </div>
     
+    <button id="logoutButton" onclick="logout()">Logout</button>
+
     <button id="loginButton" onclick="window.location.href='login.html'">Login</button>
+    <div id="welcomeMessage" style="display: none;">Welcome, <span id="usernameDisplay"></span>!</div>
+    
 
     <div class="main-content">
         <div class="game-container">
@@ -29,6 +33,30 @@
 
         </div>
     </div>
+
+    <script>
+        // checking login status
+        const username = localStorage.getItem('username');
+        if (username) {
+            document.getElementById('loginButton').style.display = 'none';
+            document.getElementById('welcomeMessage').style.display = 'block';
+            document.getElementById('usernameDisplay').textContent = username;
+            document.getElementById('logoutButton').style.display = 'inline';
+        }else{
+            document.getElementById('loginButton').style.display = 'inline';
+        }
+
+        
+        function logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('username');
+            
+            // update UI
+            document.getElementById('loginButton').style.display = 'inline';
+            document.getElementById('welcomeMessage').style.display = 'none';
+            document.getElementById('logoutButton').style.display = 'none';
+        }
+    </script>
 
     <script type="module" src="index.js"></script>
 

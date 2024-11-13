@@ -18,6 +18,7 @@
     </div>
 
     <button id="loginButton" onclick="window.location.href='login.html'">Login</button>
+    <div id="welcomeMessage" style="display: none;">Welcome, <span id="usernameDisplay"></span>!</div>
 
     <div class="main-content">
         <div class="game-container">
@@ -29,6 +30,16 @@
 
         </div>
     </div>
+
+    <script>
+        // check login status
+        const username = localStorage.getItem('username');
+        if (username) {
+            document.getElementById('loginButton').style.display = 'none'; // 隐藏登录按钮
+            document.getElementById('welcomeMessage').style.display = 'block'; // 显示欢迎信息
+            document.getElementById('usernameDisplay').textContent = username; // 显示用户名
+        }
+    </script>
 
     <script type="module" src="offline-mode.js"></script>
 

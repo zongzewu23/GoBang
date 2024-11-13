@@ -14,7 +14,8 @@ async function handleLogin() {
         if (response.ok) {
             const data = await response.json();
             localStorage.setItem('token', data.token);
-            alert('Login successful!');
+            localStorage.setItem('username', username);// save username into local storage
+            //alert('Login successful!');
             window.location.href = 'index.html'; // Redirect to the game page
         } else {
             alert('Login failed. Please check your credentials.');

@@ -198,7 +198,17 @@ h1 {
     background-color: #45a049;
 }
 
-
+#logoutButton{
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    padding: 10px 20px;
+    background-color: #f19020;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
 #loginButton {
     position: absolute;
     top: 10px;
