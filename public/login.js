@@ -15,7 +15,7 @@ async function handleLogin() {
             const data = await response.json();
             localStorage.setItem('token', data.token);
             alert('Login successful!');
-            window.location.href = 'gobang.html'; // Redirect to the game page
+            window.location.href = 'index.html'; // Redirect to the game page
         } else {
             alert('Login failed. Please check your credentials.');
         }
