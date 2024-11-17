@@ -11,11 +11,27 @@
 
 <body>
     <h1>GoBangGO!</h1>
+    
+    <div id="userInfo" class="user-info">
+        <label for="avatarUpload">
+            <img id="userAvatar" src="/src/default-avatar.jpg" alt="User Avatar" />
+        </label>
+        <input type="file" id="avatarUpload" accept="image/*" style="display: none;">
+        <span id="userNameDisplay"></span>
+    </div>
+    
+
+    <nav class="navigation-bar">
+        <a href="#" onclick="alert('Feature 1')">Feature 1</a>
+        <a href="#" onclick="alert('Feature 2')">Feature 2</a>
+        <a href="#" onclick="alert('Feature 3')">Feature 3</a>
+    </nav>
     <div class="mode-selection">
         <button class="mode-button" onclick="startMode('ai')">AI</button>
         <button class="mode-button" onclick="startMode('offline'); console.log('Button clicked!')">Friends</button>
         <button class="mode-button" onclick="startMode('online')">Online</button>
     </div>
+
     
     <button id="logoutButton" onclick="logout()">Logout</button>
 
@@ -55,6 +71,16 @@
             document.getElementById('loginButton').style.display = 'inline';
             document.getElementById('welcomeMessage').style.display = 'none';
             document.getElementById('logoutButton').style.display = 'none';
+        
+            // Hide user info
+            const userInfo = document.getElementById('userInfo');
+    if (userInfo) {
+        userInfo.classList.add('fade-out');
+        setTimeout(() => {
+            userInfo.style.display = 'none';
+            userInfo.classList.remove('fade-out'); // Clean up class for future use
+        }, 500); // Match the duration of the CSS animation
+    }
         }
     </script>
 

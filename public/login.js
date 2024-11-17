@@ -13,15 +13,17 @@ async function handleLogin() {
 
         if (response.ok) {
             const data = await response.json();
-            localStorage.setItem('token', data.token);
-            localStorage.setItem('username', username);// save username into local storage
-            //alert('Login successful!');
-            window.location.href = 'index.html'; // Redirect to the game page
+            localStorage.setItem('token', data.token); // Save authentication token
+            localStorage.setItem('username', username); // Save username into local storage
+            localStorage.setItem('avatarUrl', data.avatarUrl || '/src/default-avatar.jpg'); // Save avatar URL into local storage
+
+            // Redirect to the main game page after successful login
+            window.location.href = 'index.html';
         } else {
             alert('Login failed. Please check your credentials.');
         }
     } catch (error) {
-        console.error('Error:', error);
+        console.error('Error:', error); // Log any errors for debugging
         alert('An error occurred. Please try again later.');
     }
 }
@@ -31,6 +33,7 @@ async function handleRegister() {
     const password = document.getElementById('registerPassword').value;
     const confirmPassword = document.getElementById('registerConfirmPassword').value;
 
+    // Validate that passwords match
     if (password !== confirmPassword) {
         alert('Passwords do not match!');
         return;
@@ -47,12 +50,12 @@ async function handleRegister() {
 
         if (response.ok) {
             alert('Registration successful! You can now log in.');
-            mySwitch(); // Switch to login form
+            mySwitch(); // Switch to the login form after registration
         } else {
             alert('Registration failed. Please try again.');
         }
     } catch (error) {
-        console.error('Error:', error);
+        console.error('Error:', error); // Log any errors for debugging
         alert('An error occurred. Please try again later.');
     }
 }

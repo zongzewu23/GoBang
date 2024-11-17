@@ -9,6 +9,45 @@ body {
     background-color: #dbaf8b;
 }
 
+.user-info {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    display: flex;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 5px 10px;
+    border-radius: 5px;
+    box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+
+/* Horizontal Navigation Bar */
+.navigation-bar {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+    padding: 10px;
+    background-color: #e8b57a;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+}
+
+.navigation-bar a {
+    margin: 0 15px;
+    padding: 8px 16px;
+    text-decoration: none;
+    color: #333;
+    font-size: 1rem;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.navigation-bar a:hover {
+    background-color: #a5783a;
+    color: #fff;
+}
+
 .mode-selection {
     display: flex;
     justify-content: center;
@@ -223,6 +262,34 @@ h1 {
 
 #loginButton:hover {
     opacity: 0.8;
+}
+
+
+.user-info img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer; /* Makes the avatar look clickable */
+    transition: opacity 0.3s ease;
+}
+
+.user-info img:hover {
+    opacity: 0.8; /* Slight transparency effect on hover */
+}
+
+
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}
+
+.user-info.fade-out {
+    animation: fadeOut 0.5s forwards; /* 0.5 seconds fade-out animation */
 }
 
 

@@ -15,7 +15,7 @@ const BOARD_BG_COLOR = '#E4A751',
     WHITE_ROLE = -1,
     EMPTY_ROLE = 0;
 
-let W = Math.min(window.innerWidth, window.innerHeight) / (SIZE + 5), // size of grid
+let W = Math.min(window.innerWidth, window.innerHeight) / (SIZE + 7), // size of grid
     SL = W * (SIZE + 1);
 
 /**@type {HTMLCanvasElement} */
@@ -24,10 +24,15 @@ let canvas = document.getElementById('gameCanvas');
 let ctx = canvas.getContext('2d');
 canvas.width = canvas.height = SL;
 
+
+
 let chess = Array.from({ length: SIZE }, () => Array(SIZE).fill(EMPTY_ROLE)),
     isBlack = true, // Black first
     moveSteps = 0,
     steps = [];
+
+
+    
 
 console.log(chess);
 
@@ -52,6 +57,7 @@ const clearPiece = (x, y) => {
     drawLine(x > 0 ? x - 0.5 : x, y, x < SIZE - 1 ? x + 0.5 : x, y);
 }
 
+
 // offline mode logic
 /*
 canvas.onclick = e => {
@@ -73,6 +79,7 @@ canvas.onclick = e => {
         */
 
 // ai mode logic
+
 canvas.onclick = e => {
     // player moving logic
     let [x, y] = [e.offsetX, e.offsetY].map(p => Math.round(p / W) - 1);
@@ -297,6 +304,38 @@ whitewinSound.volume = 1;
 function whiteWinSound() {
     whitewinSound.play();
 }
+
+document.getElementById('avatarUpload').addEventListener('change', async (event) => {
+    const file = event.target.files[0];
+    if (file) {
+        const formData = new FormData();
+        formData.append('avatar', file);
+        formData.append('username', localStorage.getItem('username'));
+
+        try {
+            console.log('FormData content:', formData); 
+            const response = await fetch('http://localhost:3000/api/upload-avatar', {
+                method: 'POST',
+                body: formData,
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                document.getElementById('userAvatar').src = data.avatarUrl;
+                alert('Avatar uploaded successfully!');
+            } else {
+                alert('Failed to upload avatar');
+            }
+        } catch (error) {
+            console.error('Error during upload:', error);
+            alert('An error occurred during the upload process.');
+        }
+    }
+});
+
+
+
+
 
 window.onresize = debounce(handleResize, 512)
 
