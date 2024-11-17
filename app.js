@@ -7,6 +7,7 @@ import pool from './db.js';
 import bcrypt from 'bcrypt';
 import fs from 'fs';
 import multer from 'multer';
+import { v4 as uuidv4 } from 'uuid';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -71,16 +72,21 @@ app.post('/api/login', async (req, res) => {
 });
 
 // Configure Multer for avatar uploads
+
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        const destPath = path.join(__dirname, 'public/uploads/avatars');
-        console.log('Saving to:', destPath); // 调试存储路径
-        cb(null, destPath);
+        const userDir = path.join(__dirname, 'uploads/avatars', req.body.username);
+        if (!fs.existsSync(userDir)) {
+            fs.mkdirSync(userDir, { recursive: true });
+        }
+        cb(null, userDir);
     },
     filename: (req, file, cb) => {
-        cb(null, `${Date.now()}-${file.originalname}`);
+        const uniqueName = `${uuidv4()}-${file.originalname}`;
+        cb(null, uniqueName);
     },
 });
+
 
 
 const upload = multer({ storage });
@@ -106,9 +112,6 @@ app.post('/api/upload-avatar', upload.single('avatar'), async (req, res) => {
         res.status(500).json({ message: 'Internal server error' });
     }
 });
-
-
-
 
 
 

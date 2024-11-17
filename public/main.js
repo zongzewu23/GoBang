@@ -23,8 +23,7 @@ if (username) {
     // Ensure avatar URL is correct
     const avatarUrl = localStorage.getItem('avatarUrl') || '/src/default-avatar.jpg';
     console.log('Avatar URL:', avatarUrl); 
-    document.getElementById('userAvatar').src = avatarUrl;
-    
+    document.getElementById('userAvatar').src = avatarUrl;    
     
 }
 

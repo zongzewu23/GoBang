@@ -20,7 +20,7 @@
             <h1>WELCOME</h1>
             <p>JOIN US!</p>
             <div class="img-box">
-                <img src="./img/waoku.jpg" alt="">
+                <img src="/src/default-avatar.jpg" alt="">
             </div>
         </div>
         <!-- Registration box -->
@@ -72,11 +72,11 @@
                 // Get the sliding box DOM element and modify its background color
                 $(".pre-box").css("background-color", "#bfe3f1");
                 // Change the image path
-                $("img").attr("src", "./img/wuwu.jpeg");
+                $("img").attr("src", "/src/default-avatar.jpg");
             } else {
                 $(".pre-box").css("transform", "translateX(0%)");
                 $(".pre-box").css("background-color", "#53b494");
-                $("img").attr("src", "./img/waoku.jpg");
+                $("img").attr("src", "/src/default-avatar.jpg");
             }
             flag = !flag;
         }

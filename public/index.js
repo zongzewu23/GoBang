@@ -22,6 +22,7 @@ let W = Math.min(window.innerWidth, window.innerHeight) / (SIZE + 7), // size of
 let gameContainer = document.querySelector('.game-container');
 let canvas = document.getElementById('gameCanvas');
 let ctx = canvas.getContext('2d');
+let totalSteps = 0;
 canvas.width = canvas.height = SL;
 
 
@@ -39,15 +40,20 @@ console.log(chess);
 let undoButton = document.querySelector('.undo-button');
 
 undoButton.onclick = e => {
-    if (steps.length === 0) return;
-    isBlack = !isBlack;
-    moveSteps--;
-    let { x, y } = steps.pop();
-    chess[x][y] = EMPTY_ROLE;
-    clearPiece(x, y);
-    if (steps.length === 0) return;
-    let lastStep = steps.at(-1);
-    drawRedPoint(lastStep.x, lastStep.y);
+    for(let i = 0; i < 2; i++){
+        if (steps.length === 0) return;
+        isBlack = !isBlack;
+        moveSteps--;
+        let { x, y } = steps.pop();
+        chess[x][y] = EMPTY_ROLE;
+        clearPiece(x, y);
+        if (steps.length === 0) return;
+        let lastStep = steps.at(-1);
+        drawRedPoint(lastStep.x, lastStep.y);
+    }
+    totalSteps--;
+    updateTotalStepsDisplay();
+
 }
 
 const clearPiece = (x, y) => {
@@ -81,6 +87,7 @@ canvas.onclick = e => {
 // ai mode logic
 
 canvas.onclick = e => {
+    totalSteps++;
     // player moving logic
     let [x, y] = [e.offsetX, e.offsetY].map(p => Math.round(p / W) - 1);
     if (chess[x]?.[y] !== EMPTY_ROLE) return;
@@ -93,7 +100,9 @@ canvas.onclick = e => {
     drawRedPoint(x, y);
     steps.push({ x, y, isBlack });
     chess[x][y] = isBlack ? BLACK_ROLE : WHITE_ROLE;
-
+   
+    console.log(`Total steps: ${totalSteps}`);
+    updateTotalStepsDisplay();
     // check if there is a winning or it's a draw
     if (isWin(x, y, chess[x][y], chess)) {
         over(`${isBlack ? 'Black' : 'White'} Won!`);
@@ -198,6 +207,7 @@ const drawPiece = (x, y, isBlack) => {
     ctx.fillStyle = gradient;
     ctx.fill();
     ctx.restore();
+
 }
 
 const drawBoard = () => {
@@ -238,6 +248,7 @@ const restart = () => {
     chess = Array.from({ length: SIZE }, () => new Array(SIZE).fill(EMPTY_ROLE))
     isBlack = true;
     moveSteps = 0;
+    totalSteps = 0;
     steps = []
     sendBoardToAI();
 }
@@ -255,6 +266,7 @@ function restartGame() {
     isBlack = true;
     moveSteps = 0;
     steps = [];
+    totalSteps = 0;
     sendBoardToAI();
 }
 
@@ -284,6 +296,14 @@ const handleResize = () => {
     if (steps.length > 0) {
         let { x, y } = steps.at(-1)
         drawRedPoint(x, y)
+    }
+}
+
+// Update the steps display
+function updateTotalStepsDisplay() {
+    const totalStepsElement = document.getElementById('totalStepsDisplay');
+    if (totalStepsElement) {
+        totalStepsElement.textContent = `Total Steps: ${totalSteps}`;
     }
 }
 
@@ -322,7 +342,6 @@ document.getElementById('avatarUpload').addEventListener('change', async (event)
             if (response.ok) {
                 const data = await response.json();
                 document.getElementById('userAvatar').src = data.avatarUrl;
-                alert('Avatar uploaded successfully!');
             } else {
                 alert('Failed to upload avatar');
             }
@@ -330,6 +349,67 @@ document.getElementById('avatarUpload').addEventListener('change', async (event)
             console.error('Error during upload:', error);
             alert('An error occurred during the upload process.');
         }
+    }
+});
+
+
+// Wait for the DOM to load
+document.addEventListener('DOMContentLoaded', () => {
+    // Check login status
+    const username = localStorage.getItem('username');
+    if (username) {
+        document.getElementById('loginButton').style.display = 'none';
+        document.getElementById('welcomeMessage').style.display = 'block';
+        document.getElementById('usernameDisplay').textContent = username;
+        document.getElementById('logoutButton').style.display = 'inline';
+    } else {
+        document.getElementById('loginButton').style.display = 'inline';
+    }
+
+    // Attach logout event to the logout button
+    const logoutButton = document.getElementById('logoutButton');
+    if (logoutButton) {
+        logoutButton.addEventListener('click', logout);
+    }
+});
+
+// Logout functionality
+function logout() {
+    // Clear local storage
+    localStorage.removeItem('token');
+    localStorage.removeItem('username');
+    
+    // Update UI
+    document.getElementById('loginButton').style.display = 'inline';
+    document.getElementById('welcomeMessage').style.display = 'none';
+    document.getElementById('logoutButton').style.display = 'none';
+
+    // Hide user info with fade-out animation
+    const userInfo = document.getElementById('userInfo');
+    if (userInfo) {
+        userInfo.classList.add('fade-out'); // Add fade-out animation class
+        setTimeout(() => {
+            userInfo.style.display = 'none'; // Hide the element after animation
+            userInfo.classList.remove('fade-out'); // Remove the class for future use
+        }, 500); // Match the duration of the CSS animation
+    }
+}
+
+
+document.addEventListener('DOMContentLoaded', () => {
+    const username = localStorage.getItem('username');
+
+    if (username) {
+        fetch(`/api/get-max-steps?username=${username}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.maxSteps !== undefined) {
+                    document.getElementById('maxStepsDisplay').textContent = `Max Steps: ${data.maxSteps}`;
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching max steps:', error);
+            });
     }
 });
 

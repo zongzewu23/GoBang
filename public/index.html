@@ -33,10 +33,13 @@
     </div>
 
     
-    <button id="logoutButton" onclick="logout()">Logout</button>
+    <button id="logoutButton">Logout</button>
 
     <button id="loginButton" onclick="window.location.href='login.html'">Login</button>
-    <div id="welcomeMessage" style="display: none;">Welcome, <span id="usernameDisplay"></span>!</div>
+    <div id="gameStats">
+        <p id="totalStepsDisplay">Total Steps: 0</p>
+    </div>
+    
     
 
     <div class="main-content">
@@ -49,40 +52,6 @@
 
         </div>
     </div>
-
-    <script>
-        // checking login status
-        const username = localStorage.getItem('username');
-        if (username) {
-            document.getElementById('loginButton').style.display = 'none';
-            document.getElementById('welcomeMessage').style.display = 'block';
-            document.getElementById('usernameDisplay').textContent = username;
-            document.getElementById('logoutButton').style.display = 'inline';
-        }else{
-            document.getElementById('loginButton').style.display = 'inline';
-        }
-
-        
-        function logout() {
-            localStorage.removeItem('token');
-            localStorage.removeItem('username');
-            
-            // update UI
-            document.getElementById('loginButton').style.display = 'inline';
-            document.getElementById('welcomeMessage').style.display = 'none';
-            document.getElementById('logoutButton').style.display = 'none';
-        
-            // Hide user info
-            const userInfo = document.getElementById('userInfo');
-    if (userInfo) {
-        userInfo.classList.add('fade-out');
-        setTimeout(() => {
-            userInfo.style.display = 'none';
-            userInfo.classList.remove('fade-out'); // Clean up class for future use
-        }, 500); // Match the duration of the CSS animation
-    }
-        }
-    </script>
 
     <script type="module" src="index.js"></script>
 
