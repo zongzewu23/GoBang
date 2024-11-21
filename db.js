@@ -1,5 +1,6 @@
 // db.js
 import pkg from 'pg';
+import fs from 'fs';
 const { Pool } = pkg;
 
 const pool = new Pool({
