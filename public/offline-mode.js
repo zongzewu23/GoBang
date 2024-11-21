@@ -358,54 +358,54 @@ document.getElementById('avatarUpload').addEventListener('change', async (event)
 document.addEventListener('DOMContentLoaded', () => {
     // Check login status
     const username = localStorage.getItem('username');
+    const loginButton = document.getElementById('loginButton');
+    const logoutButton = document.getElementById('logoutButton');
+    const usernameDisplay = document.getElementById('usernameDisplay');
+    const welcomeMessage = document.getElementById('welcomeMessage');
+    const userInfo = document.getElementById('userInfo');
+    const maxStepsDisplay = document.getElementById('maxStepsDisplay');
+
+    // Login/Logout button visibility
     if (username) {
-        document.getElementById('loginButton').style.display = 'none';
-        document.getElementById('welcomeMessage').style.display = 'block';
-        document.getElementById('usernameDisplay').textContent = username;
-        document.getElementById('logoutButton').style.display = 'inline';
+        if (loginButton) loginButton.style.display = 'none';
+        if (usernameDisplay) usernameDisplay.textContent = username;
+        if (logoutButton) logoutButton.style.display = 'inline';
     } else {
-        document.getElementById('loginButton').style.display = 'inline';
+        if (loginButton) loginButton.style.display = 'inline';
+        if (logoutButton) logoutButton.style.display = 'none';
     }
 
     // Attach logout event to the logout button
-    const logoutButton = document.getElementById('logoutButton');
     if (logoutButton) {
-        logoutButton.addEventListener('click', logout);
+        logoutButton.addEventListener('click', () => {
+            // Clear local storage
+            localStorage.removeItem('token');
+            localStorage.removeItem('username');
+
+            // Update UI
+            if (loginButton) loginButton.style.display = 'inline';
+            if (welcomeMessage) welcomeMessage.style.display = 'none';
+            if (logoutButton) logoutButton.style.display = 'none';
+            console.log('User logged out');
+
+            // Hide user info with fade-out animation
+            if (userInfo) {
+                userInfo.classList.add('fade-out'); // Add fade-out animation class
+                setTimeout(() => {
+                    userInfo.style.display = 'none'; // Hide the element after animation
+                    userInfo.classList.remove('fade-out'); // Remove the class for future use
+                }, 500); // Match the duration of the CSS animation
+            }
+        });
     }
-});
 
-// Logout functionality
-function logout() {
-    // Clear local storage
-    localStorage.removeItem('token');
-    localStorage.removeItem('username');
-    
-    // Update UI
-    document.getElementById('loginButton').style.display = 'inline';
-    document.getElementById('welcomeMessage').style.display = 'none';
-    document.getElementById('logoutButton').style.display = 'none';
-
-    // Hide user info with fade-out animation
-    const userInfo = document.getElementById('userInfo');
-    if (userInfo) {
-        userInfo.classList.add('fade-out'); // Add fade-out animation class
-        setTimeout(() => {
-            userInfo.style.display = 'none'; // Hide the element after animation
-            userInfo.classList.remove('fade-out'); // Remove the class for future use
-        }, 500); // Match the duration of the CSS animation
-    }
-}
-
-
-document.addEventListener('DOMContentLoaded', () => {
-    const username = localStorage.getItem('username');
-
-    if (username) {
+    // Fetch and display max steps for the logged-in user
+    if (username && maxStepsDisplay) {
         fetch(`/api/get-max-steps?username=${username}`)
             .then(response => response.json())
             .then(data => {
                 if (data.maxSteps !== undefined) {
-                    document.getElementById('maxStepsDisplay').textContent = `Max Steps: ${data.maxSteps}`;
+                    maxStepsDisplay.textContent = `Max Steps: ${data.maxSteps}`;
                 }
             })
             .catch(error => {

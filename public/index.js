@@ -47,7 +47,10 @@ undoButton.onclick = e => {
         let { x, y } = steps.pop();
         chess[x][y] = EMPTY_ROLE;
         clearPiece(x, y);
-        if (steps.length === 0) return;
+        if (steps.length === 0) {
+            totalSteps = 0;
+            updateTotalStepsDisplay();
+        }
         let lastStep = steps.at(-1);
         drawRedPoint(lastStep.x, lastStep.y);
     }
