@@ -1,22 +1,18 @@
 // db.js
 import pkg from 'pg';
-import fs from 'fs';
-const { Pool } = pkg;
+const { Client } = pkg;
 
-const pool = new Pool({
+const client = new Client({
     connectionString: process.env.DATABASE_URL,
     ssl: {
-        ca: fs.readFileSync('./us-east-2-bundle.pem').toString(),
-        rejectUnauthorized: true, 
+        rejectUnauthorized: false,
     },
 });
 
-export default pool;
-
-pool.query('SELECT NOW()', (err, res) => {
+client.connect((err) => {
     if (err) {
-        console.error('Database connection error:', err);
+        console.error('Database connection error:', err.stack);
     } else {
-        console.log('Connected to the database at:', res.rows[0]);
+        console.log('Connected to the database');
     }
 });
