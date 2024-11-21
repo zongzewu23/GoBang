@@ -11,14 +11,32 @@
 
 <body>
     <h1>GoBangGO!</h1>
-    <div class="mode-selection">
-        <button class="mode-button" onclick="startMode('ai')">AI</button>
-        <button class="mode-button" onclick="startMode('offline')">Friends</button>
-        <button class="mode-button" onclick="startMode('online')">Online</button>
+    
+    <div id="userInfo" class="user-info">
+        <label for="avatarUpload">
+            <img id="userAvatar" src="/src/default-avatar.jpg" alt="User Avatar" />
+        </label>
+        <input type="file" id="avatarUpload" accept="image/*" style="display: none;">
+        <span id="userNameDisplay"></span>
     </div>
+    
+
+    <nav class="navigation-bar">
+        <a href="#" onclick="startMode('ai')">AI</a>
+        <a href="#" onclick="startMode('offline')">Friends</a>
+        <a href="#" onclick="startMode('online')">Online</a>
+    </nav>
+    
+
+    
+    <button id="logoutButton">Logout</button>
 
     <button id="loginButton" onclick="window.location.href='login.html'">Login</button>
-    <div id="welcomeMessage" style="display: none;">Welcome, <span id="usernameDisplay"></span>!</div>
+    <div id="gameStats">
+        <p id="totalStepsDisplay">Total Steps: 0</p>
+    </div>
+    
+    
 
     <div class="main-content">
         <div class="game-container">
@@ -30,16 +48,6 @@
 
         </div>
     </div>
-
-    <script>
-        // check login status
-        const username = localStorage.getItem('username');
-        if (username) {
-            document.getElementById('loginButton').style.display = 'none'; // 隐藏登录按钮
-            document.getElementById('welcomeMessage').style.display = 'block'; // 显示欢迎信息
-            document.getElementById('usernameDisplay').textContent = username; // 显示用户名
-        }
-    </script>
 
     <script type="module" src="offline-mode.js"></script>
 

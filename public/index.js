@@ -15,7 +15,7 @@ const BOARD_BG_COLOR = '#E4A751',
     WHITE_ROLE = -1,
     EMPTY_ROLE = 0;
 
-let W = Math.min(window.innerWidth, window.innerHeight) / (SIZE + 7), // size of grid
+let W = Math.min(window.innerWidth, window.innerHeight) / (SIZE + 8), // size of grid
     SL = W * (SIZE + 1);
 
 /**@type {HTMLCanvasElement} */
@@ -80,7 +80,7 @@ canvas.onclick = e => {
     steps.push({ x, y, isBlack })
     chess[x][y] = isBlack ? BLACK_ROLE : WHITE_ROLE;
     isWin(x, y, chess[x][y], chess) ? over(`${isBlack ? 'Black' : 'White'}Won!`) :
-        ++moveSteps === TOTAL_STEPS ? over('游戏结束，平局！') : isBlack = !isBlack;
+        ++moveSteps === TOTAL_STEPS ? over('Draw') : isBlack = !isBlack;
 }
         */
 
@@ -100,8 +100,6 @@ canvas.onclick = e => {
     drawRedPoint(x, y);
     steps.push({ x, y, isBlack });
     chess[x][y] = isBlack ? BLACK_ROLE : WHITE_ROLE;
-   
-    console.log(`Total steps: ${totalSteps}`);
     updateTotalStepsDisplay();
     // check if there is a winning or it's a draw
     if (isWin(x, y, chess[x][y], chess)) {
@@ -251,6 +249,7 @@ const restart = () => {
     totalSteps = 0;
     steps = []
     sendBoardToAI();
+    updateTotalStepsDisplay();
 }
 
 function restartGame() {
@@ -267,6 +266,7 @@ function restartGame() {
     moveSteps = 0;
     steps = [];
     totalSteps = 0;
+    updateTotalStepsDisplay();
     sendBoardToAI();
 }
 
@@ -306,6 +306,8 @@ function updateTotalStepsDisplay() {
         totalStepsElement.textContent = `Total Steps: ${totalSteps}`;
     }
 }
+
+
 
 const moveSound = new Audio('/src/piecedown.mp3');
 moveSound.volume = 1;
@@ -357,54 +359,54 @@ document.getElementById('avatarUpload').addEventListener('change', async (event)
 document.addEventListener('DOMContentLoaded', () => {
     // Check login status
     const username = localStorage.getItem('username');
+    const loginButton = document.getElementById('loginButton');
+    const logoutButton = document.getElementById('logoutButton');
+    const usernameDisplay = document.getElementById('usernameDisplay');
+    const welcomeMessage = document.getElementById('welcomeMessage');
+    const userInfo = document.getElementById('userInfo');
+    const maxStepsDisplay = document.getElementById('maxStepsDisplay');
+
+    // Login/Logout button visibility
     if (username) {
-        document.getElementById('loginButton').style.display = 'none';
-        document.getElementById('welcomeMessage').style.display = 'block';
-        document.getElementById('usernameDisplay').textContent = username;
-        document.getElementById('logoutButton').style.display = 'inline';
+        if (loginButton) loginButton.style.display = 'none';
+        if (usernameDisplay) usernameDisplay.textContent = username;
+        if (logoutButton) logoutButton.style.display = 'inline';
     } else {
-        document.getElementById('loginButton').style.display = 'inline';
+        if (loginButton) loginButton.style.display = 'inline';
+        if (logoutButton) logoutButton.style.display = 'none';
     }
 
     // Attach logout event to the logout button
-    const logoutButton = document.getElementById('logoutButton');
     if (logoutButton) {
-        logoutButton.addEventListener('click', logout);
+        logoutButton.addEventListener('click', () => {
+            // Clear local storage
+            localStorage.removeItem('token');
+            localStorage.removeItem('username');
+
+            // Update UI
+            if (loginButton) loginButton.style.display = 'inline';
+            if (welcomeMessage) welcomeMessage.style.display = 'none';
+            if (logoutButton) logoutButton.style.display = 'none';
+            console.log('User logged out');
+
+            // Hide user info with fade-out animation
+            if (userInfo) {
+                userInfo.classList.add('fade-out'); // Add fade-out animation class
+                setTimeout(() => {
+                    userInfo.style.display = 'none'; // Hide the element after animation
+                    userInfo.classList.remove('fade-out'); // Remove the class for future use
+                }, 500); // Match the duration of the CSS animation
+            }
+        });
     }
-});
 
-// Logout functionality
-function logout() {
-    // Clear local storage
-    localStorage.removeItem('token');
-    localStorage.removeItem('username');
-    
-    // Update UI
-    document.getElementById('loginButton').style.display = 'inline';
-    document.getElementById('welcomeMessage').style.display = 'none';
-    document.getElementById('logoutButton').style.display = 'none';
-
-    // Hide user info with fade-out animation
-    const userInfo = document.getElementById('userInfo');
-    if (userInfo) {
-        userInfo.classList.add('fade-out'); // Add fade-out animation class
-        setTimeout(() => {
-            userInfo.style.display = 'none'; // Hide the element after animation
-            userInfo.classList.remove('fade-out'); // Remove the class for future use
-        }, 500); // Match the duration of the CSS animation
-    }
-}
-
-
-document.addEventListener('DOMContentLoaded', () => {
-    const username = localStorage.getItem('username');
-
-    if (username) {
+    // Fetch and display max steps for the logged-in user
+    if (username && maxStepsDisplay) {
         fetch(`/api/get-max-steps?username=${username}`)
             .then(response => response.json())
             .then(data => {
                 if (data.maxSteps !== undefined) {
-                    document.getElementById('maxStepsDisplay').textContent = `Max Steps: ${data.maxSteps}`;
+                    maxStepsDisplay.textContent = `Max Steps: ${data.maxSteps}`;
                 }
             })
             .catch(error => {
@@ -412,6 +414,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
     }
 });
+
 
 
 

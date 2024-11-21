@@ -14,8 +14,9 @@ body {
     top: 10px;
     left: 10px;
     display: flex;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
     align-items: center;
-    background-color: rgba(255, 255, 255, 0.8);
+    background-color: rgba(243, 189, 89, 0.8);
     padding: 5px 10px;
     border-radius: 5px;
     box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
@@ -38,6 +39,7 @@ body {
     padding: 8px 16px;
     text-decoration: none;
     color: #333;
+    font-family: monospace;
     font-size: 1rem;
     border-radius: 5px;
     transition: background-color 0.3s ease;
@@ -46,14 +48,6 @@ body {
 .navigation-bar a:hover {
     background-color: #a5783a;
     color: #fff;
-}
-
-.mode-selection {
-    display: flex;
-    justify-content: center;
-
-    margin: 10px 0;
-
 }
 
 .mode-button {
@@ -237,17 +231,8 @@ h1 {
     background-color: #45a049;
 }
 
-#logoutButton{
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    padding: 10px 20px;
-    background-color: #f19020;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
+
+#logoutButton,
 #loginButton {
     position: absolute;
     top: 10px;
@@ -259,7 +244,7 @@ h1 {
     border-radius: 5px;
     cursor: pointer;
 }
-
+#logoutButton:hover,
 #loginButton:hover {
     opacity: 0.8;
 }
@@ -290,6 +275,23 @@ h1 {
 
 .user-info.fade-out {
     animation: fadeOut 0.5s forwards; /* 0.5 seconds fade-out animation */
+}
+
+
+
+/* General styling for total steps display */
+.steps-display {
+    position: absolute; /* Position relative to gameBoard */
+    top: -7px; /* Distance from the top of the game board */
+    right: 10px; /* Distance from the right edge of the game board */
+    font-size: 16px;
+    font-family: monospace;
+    font-weight: bold;
+    color: #333;
+    background-color: rgba(211, 141, 11, 0.6); /* Optional: Add a background for better visibility */
+    padding: 5px 10px;
+    border-radius: 5px; /* Optional: Rounded corners */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Optional: Subtle shadow */
 }
 
 

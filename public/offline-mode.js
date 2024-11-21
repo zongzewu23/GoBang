@@ -15,34 +15,47 @@ const BOARD_BG_COLOR = '#E4A751',
     WHITE_ROLE = -1,
     EMPTY_ROLE = 0;
 
-let W = Math.min(window.innerWidth, window.innerHeight) / (SIZE + 5), // size of grid
+let W = Math.min(window.innerWidth, window.innerHeight) / (SIZE + 7), // size of grid
     SL = W * (SIZE + 1);
 
 /**@type {HTMLCanvasElement} */
 let gameContainer = document.querySelector('.game-container');
 let canvas = document.getElementById('gameCanvas');
 let ctx = canvas.getContext('2d');
+let totalSteps = 0;
 canvas.width = canvas.height = SL;
+
+
 
 let chess = Array.from({ length: SIZE }, () => Array(SIZE).fill(EMPTY_ROLE)),
     isBlack = true, // Black first
     moveSteps = 0,
     steps = [];
 
+
+    
+
 console.log(chess);
 
 let undoButton = document.querySelector('.undo-button');
 
 undoButton.onclick = e => {
-    if (steps.length === 0) return;
-    isBlack = !isBlack;
-    moveSteps--;
-    let { x, y } = steps.pop();
-    chess[x][y] = EMPTY_ROLE;
-    clearPiece(x, y);
-    if (steps.length === 0) return;
-    let lastStep = steps.at(-1);
-    drawRedPoint(lastStep.x, lastStep.y);
+        if (steps.length === 0) return;
+        isBlack = !isBlack;
+        moveSteps--;
+        let { x, y } = steps.pop();
+        chess[x][y] = EMPTY_ROLE;
+        clearPiece(x, y);
+        if (steps.length === 0) {
+            totalSteps = 0;
+            updateTotalStepsDisplay();
+        }
+            let lastStep = steps.at(-1);
+        drawRedPoint(lastStep.x, lastStep.y);
+    
+    totalSteps--;
+    updateTotalStepsDisplay();
+
 }
 
 const clearPiece = (x, y) => {
@@ -52,9 +65,12 @@ const clearPiece = (x, y) => {
     drawLine(x > 0 ? x - 0.5 : x, y, x < SIZE - 1 ? x + 0.5 : x, y);
 }
 
-//offline mode implementation
+
+// offline mode logic
 canvas.onclick = e => {
     //console.log(chess);
+    totalSteps++;
+    updateTotalStepsDisplay();
     let [x, y] = [e.offsetX, e.offsetY].map(p => Math.round(p / W) - 1);
     if (chess[x]?.[y] !== EMPTY_ROLE) return;
     if (steps.length > 0) {
@@ -67,12 +83,14 @@ canvas.onclick = e => {
     steps.push({ x, y, isBlack })
     chess[x][y] = isBlack ? BLACK_ROLE : WHITE_ROLE;
     isWin(x, y, chess[x][y], chess) ? over(`${isBlack ? 'Black' : 'White'}Won!`) :
-        ++moveSteps === TOTAL_STEPS ? over('Draw！') : isBlack = !isBlack;
+        ++moveSteps === TOTAL_STEPS ? over('Game over, Draw!') : isBlack = !isBlack;
 }
+    
 
-// ai mode comment out in this mode
+// ai mode logic
 /*
 canvas.onclick = e => {
+    totalSteps++;
     // player moving logic
     let [x, y] = [e.offsetX, e.offsetY].map(p => Math.round(p / W) - 1);
     if (chess[x]?.[y] !== EMPTY_ROLE) return;
@@ -85,7 +103,7 @@ canvas.onclick = e => {
     drawRedPoint(x, y);
     steps.push({ x, y, isBlack });
     chess[x][y] = isBlack ? BLACK_ROLE : WHITE_ROLE;
-
+    updateTotalStepsDisplay();
     // check if there is a winning or it's a draw
     if (isWin(x, y, chess[x][y], chess)) {
         over(`${isBlack ? 'Black' : 'White'} Won!`);
@@ -96,14 +114,9 @@ canvas.onclick = e => {
         sendBoardToAI();     // send the board state to AI
     }
 };
-*/
-
-
-
 
 
 // Send the board state to AI at the back end, then get next AI move
-/*
 const sendBoardToAI = () => {
     fetch('/api/ai-move', {
         method: 'POST',
@@ -134,13 +147,11 @@ const sendBoardToAI = () => {
                 } else {
                     isBlack = !isBlack;  //switch to player
                 }
-
             }
         })
         .catch(error => console.error('Error:', error));
 };
 */
-
 
 const isWin = (x, y, role, chess) => {
 
@@ -161,6 +172,8 @@ const isWin = (x, y, role, chess) => {
 function showWinAnimation() {
 
     const winSound = new Audio(isBlack ? blackWinSound() : whiteWinSound());
+
+
     const overlay = document.createElement('div');
     overlay.className = 'win-overlay';
     overlay.innerHTML = `<h2>${isBlack ? 'Black Wins!' : 'White Wins!'}</h2>`;
@@ -172,9 +185,8 @@ function showWinAnimation() {
         restartGame();
     };
 
-    // add restart game button to cover
+    // Adding buttons to the overlay
     overlay.appendChild(restartGameButton);
-
     document.body.appendChild(overlay);
 }
 
@@ -196,6 +208,7 @@ const drawPiece = (x, y, isBlack) => {
     ctx.fillStyle = gradient;
     ctx.fill();
     ctx.restore();
+
 }
 
 const drawBoard = () => {
@@ -205,9 +218,7 @@ const drawBoard = () => {
         drawLine(0, i, SIZE - 1, i);
         drawLine(i, 0, i, SIZE - 1);
     }
-
 }
-
 
 const drawLine = (x1, y1, x2, y2, lineWidth = 1, lineColor = 'black') => {
     ctx.lineWidth = lineWidth;
@@ -238,8 +249,9 @@ const restart = () => {
     chess = Array.from({ length: SIZE }, () => new Array(SIZE).fill(EMPTY_ROLE))
     isBlack = true;
     moveSteps = 0;
+    totalSteps = 0;
     steps = []
-    //sendBoardToAI();
+    updateTotalStepsDisplay();
 }
 
 function restartGame() {
@@ -248,7 +260,6 @@ function restartGame() {
     if (overlay) {
         overlay.remove(); // remove from dom
     }
-
     // clear board and reset game status
     ctx.clearRect(0, 0, SL, SL);
     drawBoard();
@@ -256,7 +267,8 @@ function restartGame() {
     isBlack = true;
     moveSteps = 0;
     steps = [];
-    //sendBoardToAI();
+    totalSteps = 0;
+    updateTotalStepsDisplay();
 }
 
 
@@ -288,7 +300,15 @@ const handleResize = () => {
     }
 }
 
-const moveSound = new Audio('../src/piecedown.mp3');
+// Update the steps display
+function updateTotalStepsDisplay() {
+    const totalStepsElement = document.getElementById('totalStepsDisplay');
+    if (totalStepsElement) {
+        totalStepsElement.textContent = `Total Steps: ${totalSteps}`;
+    }
+}
+
+const moveSound = new Audio('/src/piecedown.mp3');
 moveSound.volume = 1;
 function playMoveSound() {
     moveSound.play();
@@ -305,6 +325,97 @@ whitewinSound.volume = 1;
 function whiteWinSound() {
     whitewinSound.play();
 }
+
+document.getElementById('avatarUpload').addEventListener('change', async (event) => {
+    const file = event.target.files[0];
+    if (file) {
+        const formData = new FormData();
+        formData.append('avatar', file);
+        formData.append('username', localStorage.getItem('username'));
+
+        try {
+            console.log('FormData content:', formData); 
+            const response = await fetch('http://localhost:3000/api/upload-avatar', {
+                method: 'POST',
+                body: formData,
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                document.getElementById('userAvatar').src = data.avatarUrl;
+            } else {
+                alert('Failed to upload avatar');
+            }
+        } catch (error) {
+            console.error('Error during upload:', error);
+            alert('An error occurred during the upload process.');
+        }
+    }
+});
+
+
+// Wait for the DOM to load
+document.addEventListener('DOMContentLoaded', () => {
+    // Check login status
+    const username = localStorage.getItem('username');
+    if (username) {
+        document.getElementById('loginButton').style.display = 'none';
+        document.getElementById('welcomeMessage').style.display = 'block';
+        document.getElementById('usernameDisplay').textContent = username;
+        document.getElementById('logoutButton').style.display = 'inline';
+    } else {
+        document.getElementById('loginButton').style.display = 'inline';
+    }
+
+    // Attach logout event to the logout button
+    const logoutButton = document.getElementById('logoutButton');
+    if (logoutButton) {
+        logoutButton.addEventListener('click', logout);
+    }
+});
+
+// Logout functionality
+function logout() {
+    // Clear local storage
+    localStorage.removeItem('token');
+    localStorage.removeItem('username');
+    
+    // Update UI
+    document.getElementById('loginButton').style.display = 'inline';
+    document.getElementById('welcomeMessage').style.display = 'none';
+    document.getElementById('logoutButton').style.display = 'none';
+
+    // Hide user info with fade-out animation
+    const userInfo = document.getElementById('userInfo');
+    if (userInfo) {
+        userInfo.classList.add('fade-out'); // Add fade-out animation class
+        setTimeout(() => {
+            userInfo.style.display = 'none'; // Hide the element after animation
+            userInfo.classList.remove('fade-out'); // Remove the class for future use
+        }, 500); // Match the duration of the CSS animation
+    }
+}
+
+
+document.addEventListener('DOMContentLoaded', () => {
+    const username = localStorage.getItem('username');
+
+    if (username) {
+        fetch(`/api/get-max-steps?username=${username}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.maxSteps !== undefined) {
+                    document.getElementById('maxStepsDisplay').textContent = `Max Steps: ${data.maxSteps}`;
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching max steps:', error);
+            });
+    }
+});
+
+
+
 
 
 window.onresize = debounce(handleResize, 512)
