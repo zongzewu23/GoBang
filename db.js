@@ -5,7 +5,8 @@ const { Pool } = pkg;
 const pool = new Pool({
     connectionString: process.env.DATABASE_URL,
     ssl: {
-        rejectUnauthorized: false, 
+        ca: fs.readFileSync('./us-east-2-bundle.pem').toString(),
+        rejectUnauthorized: true, 
     },
 });
 
