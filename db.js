@@ -4,15 +4,11 @@ import fs from 'fs';
 const { Pool } = pkg;
 
 const pool = new Pool({
-    user: 'Wu',
-    host: 'gobang-db.cxaws4k40uln.us-east-2.rds.amazonaws.com',
-    database: 'gobang_db',
-    password: '20040622Wzz',
-    port: 5432,
+    connectionString: process.env.DATABASE_URL,
     ssl: {
-        rejectUnauthorized: false,
-    }
-    
+        ca: fs.readFileSync('./us-east-2-bundle.pem').toString(),
+        rejectUnauthorized: true, 
+    },
 });
 
 export default pool;
