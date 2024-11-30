@@ -75,6 +75,7 @@ app.post('/api/login', async (req, res) => {
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
+        console.log('Request body:', req.body); // Debugging line
         const userDir = path.join(__dirname, 'uploads/avatars', req.body.username);
         if (!fs.existsSync(userDir)) {
             fs.mkdirSync(userDir, { recursive: true });

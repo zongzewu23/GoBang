@@ -397,30 +397,49 @@ function whiteWinSound() {
 
 document.getElementById('avatarUpload').addEventListener('change', async (event) => {
     const file = event.target.files[0];
-    if (file) {
-        const formData = new FormData();
-        formData.append('avatar', file);
-        formData.append('username', localStorage.getItem('username'));
+    const username = localStorage.getItem('username');
 
-        try {
-            console.log('FormData content:', formData); 
-            const response = await fetch('/api/upload-avatar', {
-                method: 'POST',
-                body: formData,
-            });
+    if (!username) {
+        alert('Please log in before uploading an avatar.');
+        return;
+    }
 
-            if (response.ok) {
-                const data = await response.json();
-                document.getElementById('userAvatar').src = data.avatarUrl;
-            } else {
-                alert('Failed to upload avatar');
-            }
-        } catch (error) {
-            console.error('Error during upload:', error);
-            alert('An error occurred during the upload process.');
+    if (!file) {
+        alert('Please select a file to upload.');
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append('avatar', file);
+    formData.append('username', username);
+
+    // Debug FormData contents
+    console.log('FormData content:');
+    for (let [key, value] of formData.entries()) {
+        console.log(`${key}:`, value);
+    }
+
+    try {
+        const response = await fetch('http://localhost:3000/api/upload-avatar', {
+            method: 'POST',
+            body: formData,
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            document.getElementById('userAvatar').src = data.avatarUrl;
+            alert('Avatar uploaded successfully!');
+        } else {
+            const errorData = await response.json();
+            console.error('Upload failed:', errorData);
+            alert(`Failed to upload avatar: ${errorData.message || 'Unknown error'}`);
         }
+    } catch (error) {
+        console.error('Error during upload:', error);
+        alert('An error occurred during the upload process. Please try again.');
     }
 });
+
 
 
 // Wait for the DOM to load
