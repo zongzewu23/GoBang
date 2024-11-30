@@ -404,7 +404,7 @@ document.getElementById('avatarUpload').addEventListener('change', async (event)
 
         try {
             console.log('FormData content:', formData); 
-            const response = await fetch('http://localhost:3000/api/upload-avatar', {
+            const response = await fetch('/api/upload-avatar', {
                 method: 'POST',
                 body: formData,
             });
