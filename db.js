@@ -17,7 +17,7 @@ const pool = new Pool({
 
 export default pool;
 
-// 测试数据库连接
+// Test database connection
 pool.query('SELECT NOW()', (err, res) => {
     if (err) {
         console.error('Database connection error:', err);

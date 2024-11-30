@@ -1,7 +1,7 @@
 const SIZE = 15,
     TOTAL_STEPS = SIZE * SIZE;
 
-const BOARD_BG_COLOR = '#E4A751',
+const BOARD_BG_COLOR = 'rgb(251,182,15)',
     LINE_WIDTH = 1,
     LINE_COLOR = '#000000',
     RED_POINT_COLOR = '#F56C6C',
@@ -15,7 +15,7 @@ const BOARD_BG_COLOR = '#E4A751',
     WHITE_ROLE = -1,
     EMPTY_ROLE = 0;
 
-let W = Math.min(window.innerWidth, window.innerHeight) / (SIZE + 7), // size of grid
+let W = Math.min(window.innerWidth, window.innerHeight) / (SIZE + 8), // size of grid
     SL = W * (SIZE + 1);
 
 /**@type {HTMLCanvasElement} */
@@ -23,6 +23,7 @@ let gameContainer = document.querySelector('.game-container');
 let canvas = document.getElementById('gameCanvas');
 let ctx = canvas.getContext('2d');
 let totalSteps = 0;
+let isPlayerBlack = true;
 canvas.width = canvas.height = SL;
 
 
@@ -37,26 +38,7 @@ let chess = Array.from({ length: SIZE }, () => Array(SIZE).fill(EMPTY_ROLE)),
 
 console.log(chess);
 
-let undoButton = document.querySelector('.undo-button');
 
-undoButton.onclick = e => {
-        if (steps.length === 0) return;
-        isBlack = !isBlack;
-        moveSteps--;
-        let { x, y } = steps.pop();
-        chess[x][y] = EMPTY_ROLE;
-        clearPiece(x, y);
-        if (steps.length === 0) {
-            totalSteps = 0;
-            updateTotalStepsDisplay();
-        }
-            let lastStep = steps.at(-1);
-        drawRedPoint(lastStep.x, lastStep.y);
-    
-    totalSteps--;
-    updateTotalStepsDisplay();
-
-}
 
 const clearPiece = (x, y) => {
     ctx.fillStyle = BOARD_BG_COLOR;
@@ -64,6 +46,7 @@ const clearPiece = (x, y) => {
     drawLine(x, y > 0 ? y - 0.5 : y, x, y < SIZE - 1 ? y + 0.5 : y);
     drawLine(x > 0 ? x - 0.5 : x, y, x < SIZE - 1 ? x + 0.5 : x, y);
 }
+
 
 
 // offline mode logic
@@ -77,13 +60,24 @@ canvas.onclick = e => {
         let { x, y, isBlack } = steps.at(-1)
         clearPiece(x, y);
         drawPiece(x, y, isBlack);
+        playMoveSound();
     };
     drawPiece(x, y, isBlack);
+    playMoveSound();
     drawRedPoint(x, y);
     steps.push({ x, y, isBlack })
     chess[x][y] = isBlack ? BLACK_ROLE : WHITE_ROLE;
-    isWin(x, y, chess[x][y], chess) ? over(`${isBlack ? 'Black' : 'White'}Won!`) :
-        ++moveSteps === TOTAL_STEPS ? over('Game over, Draw!') : isBlack = !isBlack;
+    if (isWin(x, y, chess[x][y], chess)) {
+        const winner = isBlack ? 'black' : 'white';
+        const result = (isPlayerBlack && winner === 'black') || (!isPlayerBlack && winner === 'white')
+            ? 'win'
+            : 'lose';
+        updateStats(result); 
+    } else if (++moveSteps === TOTAL_STEPS) {
+        alert('Draw!');
+    } else {
+        isBlack = !isBlack;      
+    }
 }
     
 
@@ -192,7 +186,7 @@ function showWinAnimation() {
 
 
 const drawPiece = (x, y, isBlack) => {
-    playMoveSound();
+  
     ctx.save();
     ctx.beginPath();
     x = x * W + W;
@@ -212,7 +206,7 @@ const drawPiece = (x, y, isBlack) => {
 }
 
 const drawBoard = () => {
-    ctx.fillStyle = '#E4A751';
+    ctx.fillStyle = BOARD_BG_COLOR;
     ctx.fillRect(0, 0, SL, SL);
     for (let i = 0; i < SIZE; i++) {
         drawLine(0, i, SIZE - 1, i);
@@ -237,11 +231,6 @@ const drawRedPoint = (x, y, r = 0.05 * W) => {
     ctx.fill();
 }
 
-let restartButton = document.querySelector('.restart-button');
-
-restartButton.onclick = () => {
-    restart();
-};
 
 const restart = () => {
     ctx.clearRect(0, 0, SL, SL);
@@ -269,6 +258,7 @@ function restartGame() {
     steps = [];
     totalSteps = 0;
     updateTotalStepsDisplay();
+    //sendBoardToAI();
 }
 
 
@@ -286,7 +276,7 @@ const debounce = (fn, delay) => {
 
 const handleResize = () => {
     ctx.clearRect(0, 0, SL, SL);
-    W = Math.min(window.innerWidth, window.innerHeight) / (SIZE + 3);
+    W = Math.min(window.innerWidth, window.innerHeight) / (SIZE + 8 );
     SL = W * (SIZE + 1);
     canvas.width = canvas.height = SL;
     drawBoard();
@@ -307,6 +297,85 @@ function updateTotalStepsDisplay() {
         totalStepsElement.textContent = `Total Steps: ${totalSteps}`;
     }
 }
+
+
+
+function updateStats(result) {
+    const username = localStorage.getItem('username');
+    fetch('/api/update-stats', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, result })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log('Stats updated:', data);
+        refreshPlayerInfo();
+    })
+    .catch(error => console.error('Error updating stats:', error));
+}
+
+
+function refreshPlayerInfo() {
+    const username = localStorage.getItem('username');
+    const statsDisplay = document.getElementById('statsDisplay');
+
+    if (!username) {
+        console.error('No username found in localStorage.');
+        return;
+    }
+
+    fetch(`/api/get-stats?username=${username}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Player stats refreshed:', data);
+            if (statsDisplay) {
+                statsDisplay.textContent = `
+                    Games: ${data.total_games}, 
+                    Wins: ${data.wins}, 
+                    Max Streak: ${data.max_streak}, 
+                    Win Rate: ${data.win_rate}%
+                `.trim();
+                statsDisplay.style.display = 'block'; // Show stats
+            }
+        })
+        .catch(error => console.error('Error fetching player stats:', error));
+}
+
+
+
+
+function undoLastMove() {
+    for(let i = 0; i < 2; i++){
+        if (steps.length === 0) return;
+        isBlack = !isBlack;
+        moveSteps--;
+        let { x, y } = steps.pop();
+        chess[x][y] = EMPTY_ROLE;
+        clearPiece(x, y);
+        if (steps.length === 0) {
+            totalSteps = 0;
+            updateTotalStepsDisplay();
+        }
+        let lastStep = steps.at(-1);
+        drawRedPoint(lastStep.x, lastStep.y);
+    }
+    totalSteps -= 2;
+    updateTotalStepsDisplay();
+
+}
+
+
 
 const moveSound = new Audio('/src/piecedown.mp3');
 moveSound.volume = 1;
@@ -367,6 +436,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Login/Logout button visibility
     if (username) {
+        refreshPlayerInfo();
         if (loginButton) loginButton.style.display = 'none';
         if (usernameDisplay) usernameDisplay.textContent = username;
         if (logoutButton) logoutButton.style.display = 'inline';
@@ -396,6 +466,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     userInfo.classList.remove('fade-out'); // Remove the class for future use
                 }, 500); // Match the duration of the CSS animation
             }
+            const statsDisplay = document.getElementById('statsDisplay');
+            if (statsDisplay) {
+                statsDisplay.style.display = 'none'; // Hide stats
+            }
         });
     }
 
@@ -412,13 +486,42 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.error('Error fetching max steps:', error);
             });
     }
+
+
+    const restartAsBlackButton = document.getElementById('restartAsBlack');
+    const restartAsWhiteButton = document.getElementById('restartAsWhite');
+    const undoButton = document.getElementById('undo');
+
+   // Reset to black
+    if (restartAsBlackButton) {
+        restartAsBlackButton.addEventListener('click', () => {
+            isPlayerBlack = true; // Set the player to black
+            restartGame();
+            console.log('Player restarts as Black');
+        });
+    }
+
+   // Reset to white
+    if (restartAsWhiteButton) {
+        restartAsWhiteButton.addEventListener('click', () => {
+            isPlayerBlack = false; // Set the player to white
+            restartGame();
+            console.log('Player restarts as White');
+            sendBoardToAI(); // If the player is white, the AI ​​moves first
+        });
+    }
+
+    // Undo one step
+    if (undoButton) {
+        undoButton.addEventListener('click', () => {
+            undoLastMove();
+            console.log('Undo last move');
+        });
+    }
 });
 
 
 
-
-
 window.onresize = debounce(handleResize, 512)
-
 window.onload = drawBoard
 

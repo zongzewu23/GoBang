@@ -114,7 +114,79 @@ app.post('/api/upload-avatar', upload.single('avatar'), async (req, res) => {
 });
 
 
+// update stats
 
+app.post('/api/update-stats', async (req, res) => {
+    const { username, result } = req.body;
+
+    if (!username || !result) {
+        return res.status(400).json({ message: 'Invalid input' });
+    }
+
+    try {
+       // Get user data
+        const userQuery = await pool.query(
+            'SELECT total_games, wins, max_streak, current_streak FROM users WHERE username = $1',
+            [username]
+        );
+
+        if (userQuery.rows.length === 0) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        const { total_games, wins, max_streak, current_streak } = userQuery.rows[0];
+
+       // Update the total number of games and wins
+        const newTotalGames = total_games + 1;
+        const newWins = result === 'win' ? wins + 1 : wins;
+
+      // Calculate the new winning streak and the maximum winning streak
+        let newCurrentStreak = result === 'win' ? current_streak + 1 : 0;
+        let newMaxStreak = Math.max(max_streak, newCurrentStreak);
+
+       // Update the database
+        await pool.query(
+            'UPDATE users SET total_games = $1, wins = $2, max_streak = $3, current_streak = $4 WHERE username = $5',
+            [newTotalGames, newWins, newMaxStreak, newCurrentStreak, username]
+        );
+
+        res.status(200).json({ message: 'Stats updated successfully' });
+    } catch (error) {
+        console.error('Error updating stats:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+});
+
+
+
+
+app.get('/api/get-stats', async (req, res) => {
+    const { username } = req.query;
+
+    try {
+        const userQuery = await pool.query(
+            'SELECT total_games, wins, max_streak FROM users WHERE username = $1',
+            [username]
+        );
+
+        if (userQuery.rows.length === 0) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        const { total_games, wins, max_streak } = userQuery.rows[0];
+        const winRate = total_games > 0 ? ((wins / total_games) * 100).toFixed(2) : 0;
+
+        res.status(200).json({ 
+            total_games, 
+            wins, 
+            max_streak, 
+            win_rate: winRate 
+        });
+    } catch (error) {
+        console.error('Error fetching stats:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+});
 
 
 const PORT = process.env.PORT || 3000; 

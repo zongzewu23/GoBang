@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
     <title>goBang</title>
     <link rel="stylesheet" href="styles.css">
     <script type="module" src="main.js" defer></script>
@@ -14,38 +15,58 @@
     
     <div id="userInfo" class="user-info">
         <label for="avatarUpload">
-            <img id="userAvatar" src="/src/default-avatar.jpg" alt="User Avatar" />
+            <img id="userAvatar" src="/src/default-avatar.jpg" alt="User Avatar" title="Click to upload your avatar!"/>
         </label>
         <input type="file" id="avatarUpload" accept="image/*" style="display: none;">
         <span id="userNameDisplay"></span>
     </div>
-    
+   
 
     <nav class="navigation-bar">
-        <a href="#" onclick="startMode('ai')">AI</a>
-        <a href="#" onclick="startMode('offline')">Friends</a>
-        <a href="#" onclick="startMode('online')">Online</a>
+        <a href="#" onclick="startMode('ai')">
+            <span class="material-symbols-outlined">smart_toy</span>
+            AI
+        </a>
+        <a href="#" onclick="startMode('offline')">
+            <span class="material-symbols-outlined">group</span>
+            Friends
+        </a>
+        <a href="#" onclick="startMode('online')">
+            <span class="material-symbols-outlined">public</span>
+            Online
+        </a>
     </nav>
     
     
+    
     <button id="logoutButton">Logout</button>
-
     <button id="loginButton" onclick="window.location.href='login.html'">Login</button>
 
     
     
 
+    
+
     <div class="main-content">
         <div class="game-container">
-            <p id="totalStepsDisplay" class="steps-display">Total Steps: 0</p>
-            <canvas id="gameCanvas" class="game-canvas"></canvas>
-            <div class="two-button">
-                <button class="restart-button">Restart</button>
-                <button class="undo-button">Undo</button>
+            <div id="statsDisplay" class="stats-display"></div>
+            <!-- Game Board Container -->
+            <div class="game-board" style="position: relative;">
+                <!-- Total Steps Display -->
+                <p id="totalStepsDisplay" class="steps-display">Total Steps: 0</p>
+                <!-- Game Board Canvas -->
+                <canvas id="gameCanvas" class="game-canvas"></canvas>
             </div>
-
+    
+            <!-- Control Buttons -->
+            <div class="three-button">
+                <button id="restartAsBlack">Restart as Black</button>
+                <button id="undo">Undo</button>
+                <button id="restartAsWhite">Restart as White</button>
+            </div>
         </div>
     </div>
+    
 
     <script type="module" src="offline-mode.js"></script>
 

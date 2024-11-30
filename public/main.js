@@ -1,4 +1,4 @@
-window.startMode = function(mode) {
+window.startMode = function (mode) {
     switch (mode) {
         case 'ai':
             window.location.href = 'index.html';
@@ -6,27 +6,40 @@ window.startMode = function(mode) {
         case 'offline':
             window.location.href = 'offline-mode.html';
             break;
-        case 'online':
-            initOnlineMode();
-            break;
         default:
             console.error('Mystery Mode');
     }
 };
 
-// Check if user is logged in
+
 const username = localStorage.getItem('username');
 if (username) {
-    document.getElementById('userInfo').style.display = 'flex';
-    document.getElementById('userNameDisplay').textContent = username;
+    const userInfo = document.getElementById('userInfo');
+    const userNameDisplay = document.getElementById('userNameDisplay');
+    const userAvatar = document.getElementById('userAvatar');
+    const statsDisplay = document.getElementById('statsDisplay');
 
-    // Ensure avatar URL is correct
+    if (userInfo) userInfo.style.display = 'flex';
+    if (userNameDisplay) userNameDisplay.textContent = username;
+
+   
     const avatarUrl = localStorage.getItem('avatarUrl') || '/src/default-avatar.jpg';
-    console.log('Avatar URL:', avatarUrl); 
-    document.getElementById('userAvatar').src = avatarUrl;    
+    if (userAvatar) userAvatar.src = avatarUrl;
+
     
+    fetch(`/api/get-stats?username=${username}`)
+        .then(response => response.json())
+        .then(data => {
+            if (statsDisplay) {
+               statsDisplay.textContent = `
+                    Games: ${data.total_games}, 
+                    Wins: ${data.wins}, 
+                    Max Streak: ${data.max_streak}, 
+                    Win Rate: ${data.win_rate}%
+                `.trim();
+            }
+        })
+        .catch(error => console.error('Error fetching stats:', error));
 }
 
-
 console.log('main.js loaded');
-
