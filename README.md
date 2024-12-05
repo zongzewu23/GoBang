@@ -73,8 +73,8 @@ The project features modern frontend techniques with a Node.js backend to handle
 ---
 
 - [ ] Implement online multiplayer mode.
-- [ ] Optimize AI for faster responses.
-- [ ] Add user login and leaderboard functionality.
+- [x] Optimize AI for faster responses.
+- [x] Add user login and leaderboard functionality.
 
 ---
 
