@@ -395,6 +395,8 @@ function whiteWinSound() {
     whitewinSound.play();
 }
 
+const BASE_URL = window.location.origin;
+
 document.getElementById('avatarUpload').addEventListener('change', async (event) => {
     const file = event.target.files[0];
     const username = localStorage.getItem('username');
@@ -416,7 +418,7 @@ document.getElementById('avatarUpload').addEventListener('change', async (event)
     
 
     try {
-        const response = await fetch('http://localhost:3000/api/upload-avatar', {
+        const response = await fetch(`${BASE_URL}/api/upload-avatar`, {
             method: 'POST',
             body: formData,
         });
@@ -435,6 +437,7 @@ document.getElementById('avatarUpload').addEventListener('change', async (event)
         alert('An error occurred during the upload process. Please try again.');
     }
 });
+
 
 
 // Wait for the DOM to load
