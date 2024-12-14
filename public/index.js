@@ -36,7 +36,7 @@ let chess = Array.from({ length: SIZE }, () => Array(SIZE).fill(EMPTY_ROLE)),
 
     
 
-console.log(chess);
+//console.log(chess);
 
 
 
@@ -411,13 +411,9 @@ document.getElementById('avatarUpload').addEventListener('change', async (event)
 
     const formData = new FormData();
     formData.append('avatar', file);
-    formData.append('username', username);
+    formData.append('username', localStorage.getItem('username'));
 
-    // Debug FormData contents
-    console.log('FormData content:');
-    for (let [key, value] of formData.entries()) {
-        console.log(`${key}:`, value);
-    }
+    
 
     try {
         const response = await fetch('http://localhost:3000/api/upload-avatar', {

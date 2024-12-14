@@ -72,15 +72,13 @@ app.post('/api/login', async (req, res) => {
 });
 
 // Configure Multer for avatar uploads
-
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        console.log('Request body:', req.body); // Debugging line
-        const userDir = path.join(__dirname, 'uploads/avatars', req.body.username);
+        const userDir = path.join(__dirname, 'public/uploads/avatars'); // 固定路径
         if (!fs.existsSync(userDir)) {
             fs.mkdirSync(userDir, { recursive: true });
         }
-        cb(null, userDir);
+        cb(null, userDir); 
     },
     filename: (req, file, cb) => {
         const uniqueName = `${uuidv4()}-${file.originalname}`;
@@ -88,21 +86,21 @@ const storage = multer.diskStorage({
     },
 });
 
-
-
 const upload = multer({ storage });
+
+
+
 
 // Avatar Upload Endpoint with Database Update
 app.post('/api/upload-avatar', upload.single('avatar'), async (req, res) => {
-    console.log('Request body:', req.body);
-    console.log('Uploaded file:', req.file);
-
+    //console.log('Request body:', req.body);
+    //console.log('Uploaded file:', req.file);
     if (!req.file) {
         return res.status(400).json({ message: 'No file uploaded' });
     }
 
     const avatarUrl = `/uploads/avatars/${req.file.filename}`;
-    console.log('File stored at:', avatarUrl);
+    //console.log('File stored at:', avatarUrl);
     const username = req.body.username;
 
     try {
