@@ -108,7 +108,7 @@ body {
 }
 
 /* Responsive Design for Smaller Screens */
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
     .main-content {
         padding: 10px;
         gap: 15px;
@@ -402,7 +402,7 @@ h1 {
 }
 
 /* Responsive styling for smaller screens */
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
     .steps-display {
         font-size: 0.7rem; /* Adjust font size for smaller screens */
         padding: 4px 8px; /* Adjust padding for smaller screens */
