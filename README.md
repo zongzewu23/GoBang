@@ -80,7 +80,6 @@ GoBang/
 
 ## 📘 Usage
 
----
 
 ### **Play the Game**
 
@@ -103,15 +102,23 @@ GoBang/
 
 
 ---
-  ## 📈 Roadmap
+  ## 🎯 Roadmap
 
----
+
 
 - [ ] Implement online multiplayer mode.
 - [x] Optimize AI for faster responses.
 - [x] Add user login and leaderboard functionality.
 
 ---
+## 📈 Code Statistics
+> **Note:** These counts exclude empty lines for a more accurate measure of code content.
+
+- **JavaScript:** 2482 lines
+- **HTML:** 196 lines
+- **CSS:** 528 lines
+- **Total:** 3206 lines
+
 
 ## 🤝 Contribution
 
